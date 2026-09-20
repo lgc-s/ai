@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Racing Legends Ranking</title>
+  <style>
+    :root {
+      --dark-bg: #120704;
+      --glass-surface: rgba(255, 255, 255, 0.06);
+      --glass-surface-hover: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.16);
+      --glass-highlight: rgba(255, 255, 255, 0.25);
+      --white: #ffffff;
+      --white-subtle: rgba(255, 255, 255, 0.7);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(circle at 50% 20%, #4a2515 0%, #241109 50%, #0d0402 100%);
+      background-attachment: fixed;
+      color: var(--white);
+      min-height: 100vh;
+      padding: 20px 12px;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .glass-card {
+      background: var(--glass-surface);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-top: 1px solid var(--glass-highlight);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    h2 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--white-subtle);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr 1fr 1fr 1fr auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .form-group label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--white-subtle);
+    }
+
+    input, select {
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--glass-border);
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--white);
+      font-size: 12px;
+      outline: none;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+
+    select option {
+      background: #1a0c06;
+      color: #fff;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--white);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .team-picker-box {
+      grid-column: span 6;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px dashed var(--glass-border);
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 6px;
+    }
+
+    .team-picker-inputs {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .team-chips-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .team-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 3px 10px 3px 4px;
+      font-size: 11px;
+    }
+
+    .team-chip img {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .team-chip-remove {
+      cursor: pointer;
+      color: #ff6b6b;
+      font-weight: bold;
+      margin-left: 4px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    button {
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: none;
+      background: var(--white);
+      color: #120704;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    button:hover {
+      background: rgba(255, 255, 255, 0.9);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.15);
+      color: var(--white);
+      border: 1px solid var(--glass-border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-cancel {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: var(--white);
+      display: none;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      width: 100%;
+      max-width: 550px;
+      max-height: 85vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 10px; vertical-align: middle; }
+    th { border-bottom: 1px solid var(--glass-border); font-size: 11px; text-transform: uppercase; color: var(--white-subtle); }
+    tr.driver-row { border-bottom: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; transition: background 0.2s ease; }
+    tr.driver-row:hover { background: var(--glass-surface-hover); }
+
+    .flag-frame {
+      width: 28px; height: 18px; margin: 0 auto; border-radius: 3px; overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    }
+    .flag-img { width: 100%; height: 100%; object-fit: cover; }
+
+    .titles-container { display: flex; flex-wrap: wrap; gap: 4px; }
+    .title-tag {
+      background: linear-gradient(135deg, #ffe066, #d4af37, #8a5a00);
+      color: #1a0c06; font-size: 10px; font-weight: 800; padding: 2px 5px; border-radius: 4px;
+    }
+
+    .points-badge {
+      font-weight: 700; font-size: 12px; padding: 3px 9px; border-radius: 12px; display: inline-block;
+    }
+    .badge-gold { background: linear-gradient(135deg, #ffd700, #b8860b); color: #120704; }
+    .badge-purple { background: linear-gradient(135deg, #ab47bc, #6a1b9a); color: #fff; }
+    .badge-green { background: linear-gradient(135deg, #2e7d32, #1b5e20); color: #fff; }
+    .badge-blue { background: linear-gradient(135deg, #1565c0, #0d47a1); color: #fff; }
+    .badge-default { background: rgba(255, 255, 255, 0.12); color: var(--white); }
+
+    .actions { display: flex; gap: 4px; }
+    .btn-sm { padding: 4px 8px; font-size: 11px; }
+    .btn-delete { background: rgba(255, 255, 255, 0.1); color: var(--white); }
+    .btn-delete:hover { background: #c62828; color: #fff; }
+
+    .details-row { background: rgba(0, 0, 0, 0.35); }
+    .details-container { padding: 14px; }
+    .teams-grid { display: flex; flex-wrap: wrap; gap: 14px; }
+    .team-badge-item { display: flex; flex-direction: column; align-items: center; width: 70px; text-align: center; }
+    .team-circle {
+      width: 48px; height: 48px; border-radius: 50%; overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.4);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 4px;
+    }
+    .team-circle img { width: 100%; height: 100%; object-fit: cover; }
+    .team-name { font-size: 10px; font-weight: 700; }
+    .team-years { font-size: 9px; color: var(--white-subtle); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header-bar">
+      <h1>Racing Legends Ranking</h1>
+      <button class="btn-secondary" onclick="openTeamModal()">⚙️ Manage Teams</button>
+    </div>
+
+    <div class="glass-card">
+      <h2 id="form-title">Add Driver</h2>
+      <form id="driver-form">
+        <input type="hidden" id="driver-id">
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Flag (URL)</label>
+            <input type="url" id="flagUrl" placeholder="https://..." required>
+          </div>
+
+          <div class="form-group">
+            <label>Driver Name</label>
+            <input type="text" id="name" placeholder="Driver Name" required>
+          </div>
+
+          <div class="form-group">
+            <label>Total Period</label>
+            <input type="text" id="years" placeholder="Total Period" required>
+          </div>
+
+          <div class="form-group">
+            <label>Titles</label>
+            <input type="text" id="titles" placeholder="Titles">
+          </div>
+
+          <div class="form-group">
+            <label>Points</label>
+            <input type="number" id="points" placeholder="Points" required>
+          </div>
+
+          <div class="btn-group">
+            <button type="submit" id="btn-save">Save</button>
+            <button type="button" class="btn-cancel" id="btn-cancel" onclick="resetForm()">Cancel</button>
+          </div>
+        </div>
+
+        <div class="team-picker-box">
+          <label style="font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--white-subtle); display: block; margin-bottom: 6px;">
+            Link Team History
+          </label>
+          <div class="team-picker-inputs">
+            <select id="picker-team-select">
+            </select>
+            <input type="text" id="picker-team-years" placeholder="Years in team (e.g. 2021-2024)" style="max-width: 200px;">
+            <button type="button" class="btn-secondary" onclick="addTeamToCurrentDriver()">+ Add</button>
+          </div>
+
+          <div id="driver-teams-chips" class="team-chips-container">
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="glass-card table-container">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 35px; text-align: center;">#</th>
+            <th style="width: 50px; text-align: center;">Country</th>
+            <th>Driver</th>
+            <th>Period</th>
+            <th>Titles</th>
+            <th>Points</th>
+            <th style="width: 170px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="driver-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="team-modal" class="modal-overlay">
+    <div class="glass-card modal-content">
+      <div class="modal-header">
+        <h2>Manage Teams</h2>
+        <button class="btn-sm btn-delete" onclick="closeTeamModal()">✕ Close</button>
+      </div>
+
+      <form id="team-crud-form" style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; margin-bottom: 16px;">
+        <input type="hidden" id="crud-team-id">
+        <div class="form-group">
+          <label>Team Name</label>
+          <input type="text" id="crud-team-name" placeholder="Team Name" required>
+        </div>
+        <div class="form-group">
+          <label>Logo (URL)</label>
+          <input type="text" id="crud-team-logo" placeholder="https://..." required>
+        </div>
+        <div style="display: flex; gap: 4px; align-self: end;">
+          <button type="submit" id="btn-team-save">Save</button>
+          <button type="button" id="btn-team-cancel" class="btn-cancel" onclick="resetTeamForm()">✕</button>
+        </div>
+      </form>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 40px;">Logo</th>
+              <th>Team Name</th>
+              <th style="width: 100px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="team-crud-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_DRIVERS = 'racing_legends_drivers_v1';
+    const STORAGE_TEAMS = 'racing_legends_teams_v1';
+
+    const initialTeams = [
+      { id: 0, name: 'Team', logoUrl: '' },
+    ];
+
+    const initialDrivers = [
+      { 
+        id: 0, flagUrl: '', name: '', years: '', titles: '', points: 0,
+        teams: [
+          { teamId: 0, years: '' },
+        ]
+      }
+    ];
+
+    let teams = loadData(STORAGE_TEAMS, initialTeams);
+    let drivers = loadData(STORAGE_DRIVERS, initialDrivers);
+
+    let tempDriverTeams = [];
+    let expandedDriverId = null;
+
+    function loadData(key, fallback) {
+      const stored = localStorage.getItem(key);
+      return stored ? JSON.parse(stored) : fallback;
+    }
+
+    function saveData() {
+      localStorage.setItem(STORAGE_TEAMS, JSON.stringify(teams));
+      localStorage.setItem(STORAGE_DRIVERS, JSON.stringify(drivers));
+    }
+
+    function openTeamModal() {
+      document.getElementById('team-modal').classList.add('active');
+      renderTeamCrudTable();
+    }
+
+    function closeTeamModal() {
+      document.getElementById('team-modal').classList.remove('active');
+      resetTeamForm();
+      populateTeamDropdown();
+      renderTable();
+    }
+
+    function renderTeamCrudTable() {
+      const tbody = document.getElementById('team-crud-table-body');
+      tbody.innerHTML = teams.map(t => `
+        <tr>
+          <td>
+            <div class="team-circle" style="width: 28px; height: 28px;">
+              <img src="${t.logoUrl}">
+            </div>
+          </td>
+          <td><strong>${t.name}</strong></td>
+          <td class="actions">
+            <button class="btn-sm" onclick="editTeam(${t.id})">Edit</button>
+            <button class="btn-sm btn-delete" onclick="deleteTeam(${t.id})">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('team-crud-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const id = document.getElementById('crud-team-id').value;
+      const name = document.getElementById('crud-team-name').value;
+      const logoUrl = document.getElementById('crud-team-logo').value;
+
+      if (id) {
+        const idx = teams.findIndex(t => t.id == id);
+        if (idx !== -1) teams[idx] = { id: parseInt(id), name, logoUrl };
+      } else {
+        const newId = teams.length ? Math.max(...teams.map(t => t.id)) + 1 : 1;
+        teams.push({ id: newId, name, logoUrl });
+      }
+
+      saveData();
+      resetTeamForm();
+      renderTeamCrudTable();
+      populateTeamDropdown();
+    });
+
+    function editTeam(id) {
+      const team = teams.find(t => t.id === id);
+      if (team) {
+        document.getElementById('crud-team-id').value = team.id;
+        document.getElementById('crud-team-name').value = team.name;
+        document.getElementById('crud-team-logo').value = team.logoUrl;
+        document.getElementById('btn-team-cancel').style.display = 'inline-block';
+      }
+    }
+
+    function deleteTeam(id) {
+      if (confirm('Remove this team?')) {
+        teams = teams.filter(t => t.id !== id);
+        saveData();
+        renderTeamCrudTable();
+        populateTeamDropdown();
+      }
+    }
+
+    function resetTeamForm() {
+      document.getElementById('team-crud-form').reset();
+      document.getElementById('crud-team-id').value = '';
+      document.getElementById('btn-team-cancel').style.display = 'none';
+    }
+
+    function populateTeamDropdown() {
+      const select = document.getElementById('picker-team-select');
+      select.innerHTML = teams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+    }
+
+    function addTeamToCurrentDriver() {
+      const select = document.getElementById('picker-team-select');
+      const yearsInput = document.getElementById('picker-team-years');
+      
+      const teamId = parseInt(select.value);
+      const years = yearsInput.value.trim();
+
+      if (!teamId || !years) {
+        alert('Please select a team and specify the years.');
+        return;
+      }
+
+      tempDriverTeams.push({ teamId, years });
+      yearsInput.value = '';
+      renderDriverTeamChips();
+    }
+
+    function removeTeamFromCurrentDriver(index) {
+      tempDriverTeams.splice(index, 1);
+      renderDriverTeamChips();
+    }
+
+    function renderDriverTeamChips() {
+      const container = document.getElementById('driver-teams-chips');
+      container.innerHTML = tempDriverTeams.map((dt, idx) => {
+        const teamObj = teams.find(t => t.id === dt.teamId) || { name: 'Unknown', logoUrl: '' };
+        return `
+          <div class="team-chip">
+            <img src="${teamObj.logoUrl}">
+            <span><strong>${teamObj.name}</strong> (${dt.years})</span>
+            <span class="team-chip-remove" onclick="removeTeamFromCurrentDriver(${idx})">✕</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function getBadgeClass(points) {
+      if (points > 3000) return 'badge-gold';
+      if (points > 1000) return 'badge-purple';
+      if (points > 500)  return 'badge-green';
+      if (points > 250)  return 'badge-blue';
+      return 'badge-default';
+    }
+
+    function renderTitleTags(titlesStr) {
+      if (!titlesStr || !titlesStr.trim()) return '<span style="color: rgba(255,255,255,0.2);">—</span>';
+      const years = titlesStr.split(',').map(y => y.trim()).filter(y => y);
+      return `<div class="titles-container">${years.map(y => `<span class="title-tag">🏆 ${y}</span>`).join('')}</div>`;
+    }
+
+    function toggleExpand(id, event) {
+      if (event) event.stopPropagation();
+      expandedDriverId = (expandedDriverId === id) ? null : id;
+      renderTable();
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('driver-table-body');
+      tbody.innerHTML = '';
+      drivers.sort((a, b) => b.points - a.points);
+
+      drivers.forEach((driver, index) => {
+        const isExpanded = (expandedDriverId === driver.id);
+        const row = document.createElement('tr');
+        row.className = 'driver-row';
+        row.onclick = () => toggleExpand(driver.id);
+        
+        row.innerHTML = `
+          <td style="text-align: center;"><strong>${index + 1}</strong></td>
+          <td><div class="flag-frame"><img src="${driver.flagUrl}" class="flag-img"></div></td>
+          <td><strong>${driver.name}</strong></td>
+          <td>${driver.years}</td>
+          <td>${renderTitleTags(driver.titles)}</td>
+          <td><span class="points-badge ${getBadgeClass(driver.points)}">${driver.points}</span></td>
+          <td class="actions" onclick="event.stopPropagation()">
+            <button class="btn-sm btn-secondary" onclick="toggleExpand(${driver.id}, event)">${isExpanded ? 'Close' : 'Teams'}</button>
+            <button class="btn-sm" onclick="editDriver(${driver.id})">Edit</button>
+            <button class="btn-sm btn-delete" onclick="deleteDriver(${driver.id})">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+
+        if (isExpanded) {
+          const detailRow = document.createElement('tr');
+          detailRow.className = 'details-row';
+
+          const teamsHtml = (driver.teams || []).map(dt => {
+            const teamObj = teams.find(t => t.id === dt.teamId) || { name: 'Unknown', logoUrl: '' };
+            return `
+              <div class="team-badge-item">
+                <div class="team-circle">
+                  <img src="${teamObj.logoUrl}" onerror="this.src='https://via.placeholder.com/60?text=?'">
+                </div>
+                <span class="team-name">${teamObj.name}</span>
+                <span class="team-years">${dt.years}</span>
+              </div>
+            `;
+          }).join('');
+
+          detailRow.innerHTML = `
+            <td colspan="7">
+              <div class="details-container">
+                <div style="font-size: 11px; text-transform: uppercase; margin-bottom: 8px; color: var(--white-subtle);">Team History</div>
+                <div class="teams-grid">${teamsHtml || '<span style="font-size: 11px;">No team history.</span>'}</div>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(detailRow);
+        }
+      });
+    }
+
+    document.getElementById('driver-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const id = document.getElementById('driver-id').value;
+      const flagUrl = document.getElementById('flagUrl').value;
+      const name = document.getElementById('name').value;
+      const years = document.getElementById('years').value;
+      const titles = document.getElementById('titles').value;
+      const points = parseInt(document.getElementById('points').value);
+
+      if (id) {
+        const idx = drivers.findIndex(d => d.id == id);
+        if (idx !== -1) drivers[idx] = { id: parseInt(id), flagUrl, name, years, titles, points, teams: tempDriverTeams };
+      } else {
+        const newId = drivers.length ? Math.max(...drivers.map(d => d.id)) + 1 : 1;
+        drivers.push({ id: newId, flagUrl, name, years, titles, points, teams: tempDriverTeams });
+      }
+
+      saveData();
+      resetForm();
+      renderTable();
+    });
+
+    function editDriver(id) {
+      const driver = drivers.find(d => d.id === id);
+      if (driver) {
+        document.getElementById('driver-id').value = driver.id;
+        document.getElementById('flagUrl').value = driver.flagUrl;
+        document.getElementById('name').value = driver.name;
+        document.getElementById('years').value = driver.years;
+        document.getElementById('titles').value = driver.titles || '';
+        document.getElementById('points').value = driver.points;
+        
+        tempDriverTeams = driver.teams ? [...driver.teams] : [];
+        renderDriverTeamChips();
+
+        document.getElementById('form-title').textContent = 'Edit Driver';
+        document.getElementById('btn-cancel').style.display = 'inline-block';
+      }
+    }
+
+    function deleteDriver(id) {
+      if (confirm('Remove this driver?')) {
+        drivers = drivers.filter(d => d.id !== id);
+        saveData();
+        renderTable();
+      }
+    }
+
+    function resetForm() {
+      document.getElementById('driver-form').reset();
+      document.getElementById('driver-id').value = '';
+      tempDriverTeams = [];
+      renderDriverTeamChips();
+      document.getElementById('form-title').textContent = 'Add Driver';
+      document.getElementById('btn-cancel').style.display = 'none';
+    }
+
+    populateTeamDropdown();
+    renderTable();
+  </script>
+</body>
+</html>
