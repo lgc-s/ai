@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Datadash</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: #080c0a;
+      color: #e2e8f0;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .ambient-glow-1 {
+      position: absolute;
+      top: -10%;
+      left: -10%;
+      width: 50vw;
+      height: 50vw;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ambient-glow-2 {
+      position: absolute;
+      bottom: -10%;
+      right: -10%;
+      width: 50vw;
+      height: 50vw;
+      background: radial-gradient(circle, rgba(132, 204, 22, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .sidebar {
+      width: 280px;
+      height: 100vh;
+      background: rgba(15, 23, 19, 0.45);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      flex-direction: column;
+      padding: 32px 20px;
+      z-index: 10;
+    }
+
+    .brand-title {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #34d399 0%, #a3e635 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 40px;
+      padding-left: 12px;
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .nav-button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: left;
+    }
+
+    .nav-button svg {
+      width: 20px;
+      height: 20px;
+      stroke: #94a3b8;
+      stroke-width: 2;
+      fill: none;
+      transition: all 0.25s ease;
+      flex-shrink: 0;
+    }
+
+    .nav-button:hover {
+      color: #f1f5f9;
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-button:hover svg {
+      stroke: #34d399;
+    }
+
+    .nav-button.active {
+      color: #ffffff;
+      background: rgba(16, 185, 129, 0.12);
+      border-color: rgba(52, 211, 153, 0.25);
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.08);
+    }
+
+    .nav-button.active svg {
+      stroke: #a3e635;
+    }
+
+    .main-content {
+      flex: 1;
+      height: 100vh;
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .glass-card {
+      width: 100%;
+      max-width: 900px;
+      height: 100%;
+      max-height: 600px;
+      background: rgba(18, 28, 23, 0.35);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.3), transparent);
+    }
+
+    .section-view {
+      display: none;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .section-view.active {
+      display: block;
+    }
+
+    .section-title {
+      font-size: 36px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+
+    .section-description {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #94a3b8;
+      max-width: 640px;
+      font-weight: 400;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-glow-1"></div>
+  <div class="ambient-glow-2"></div>
+
+  <aside class="sidebar">
+    <div class="brand-title">Datadash</div>
+    <ul class="nav-menu">
+      <li>
+        <button class="nav-button active" onclick="switchSection('hall-of-fame', this)">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+            <path d="M4 22h16"></path>
+            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+            <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path>
+          </svg>
+          Hall of Fame
+        </button>
+      </li>
+      <li>
+        <button class="nav-button" onclick="switchSection('check-center', this)">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <path d="m9 12 2 2 4-4"></path>
+          </svg>
+          Check Center
+        </button>
+      </li>
+      <li>
+        <button class="nav-button" onclick="switchSection('simulator', this)">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+          Simulator
+        </button>
+      </li>
+      <li>
+        <button class="nav-button" onclick="switchSection('generator', this)">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v3"></path>
+            <path d="M18.36 5.64l-2.12 2.12"></path>
+            <path d="M21 12h-3"></path>
+            <path d="M18.36 18.36l-2.12-2.12"></path>
+            <path d="M12 21v-3"></path>
+            <path d="M5.64 18.36l2.12-2.12"></path>
+            <path d="M3 12h3"></path>
+            <path d="M5.64 5.64l2.12 2.12"></path>
+          </svg>
+          Generator
+        </button>
+      </li>
+      <li>
+        <button class="nav-button" onclick="switchSection('report-hub', this)">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          Report Hub
+        </button>
+      </li>
+      <li>
+        <button class="nav-button" onclick="switchSection('data-browser', this)">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+          </svg>
+          Data Browser
+        </button>
+      </li>
+      <li>
+        <button class="nav-button" onclick="switchSection('local-guard', this)">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          Local Guard
+        </button>
+      </li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <div class="glass-card">
+      
+      <div id="hall-of-fame" class="section-view active">
+        <h2 class="section-title">Hall of Fame</h2>
+        <p class="section-description">Not available.</p>
+      </div>
+
+      <div id="check-center" class="section-view">
+        <h2 class="section-title">Check Center</h2>
+        <p class="section-description">Not available.</p>
+      </div>
+
+      <div id="simulator" class="section-view">
+        <h2 class="section-title">Simulator</h2>
+        <p class="section-description">Not available.</p>
+      </div>
+
+      <div id="generator" class="section-view">
+        <h2 class="section-title">Generator</h2>
+        <p class="section-description">Not available.</p>
+      </div>
+
+      <div id="report-hub" class="section-view">
+        <h2 class="section-title">Report Hub</h2>
+        <p class="section-description">Not available.</p>
+      </div>
+
+      <div id="data-browser" class="section-view">
+        <h2 class="section-title">Data Browser</h2>
+        <p class="section-description">Not available.</p>
+      </div>
+
+      <div id="local-guard" class="section-view">
+        <h2 class="section-title">Local Guard</h2>
+        <p class="section-description">Not available.</p>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    function switchSection(sectionId, element) {
+      const views = document.querySelectorAll('.section-view');
+      views.forEach(view => view.classList.remove('active'));
+
+      const buttons = document.querySelectorAll('.nav-button');
+      buttons.forEach(button => button.classList.remove('active'));
+
+      document.getElementById(sectionId).classList.add('active');
+      element.classList.add('active');
+    }
+  </script>
+</body>
+</html>
