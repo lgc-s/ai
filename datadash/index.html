@@ -6,7 +6,7 @@
   <title>Datadash</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Russo+One&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -47,7 +47,7 @@
     }
 
     .sidebar {
-      width: 280px;
+      width: 240px;
       height: 100vh;
       background: rgba(15, 23, 19, 0.45);
       backdrop-filter: blur(20px);
@@ -55,26 +55,27 @@
       border-right: 1px solid rgba(255, 255, 255, 0.07);
       display: flex;
       flex-direction: column;
-      padding: 32px 20px;
+      padding: 16px 12px;
       z-index: 10;
+      flex-shrink: 0;
     }
 
     .brand-title {
-      font-size: 24px;
+      font-size: 20px;
       font-weight: 700;
       letter-spacing: -0.5px;
       background: linear-gradient(135deg, #34d399 0%, #a3e635 100%);
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 40px;
-      padding-left: 12px;
+      margin-bottom: 20px;
+      padding-left: 8px;
     }
 
     .nav-menu {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 4px;
       list-style: none;
       overflow-y: auto;
     }
@@ -83,13 +84,13 @@
       width: 100%;
       display: flex;
       align-items: center;
-      gap: 14px;
-      padding: 14px 16px;
+      gap: 10px;
+      padding: 10px 12px;
       background: transparent;
       border: 1px solid transparent;
-      border-radius: 12px;
+      border-radius: 8px;
       color: #94a3b8;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.25s ease;
@@ -97,8 +98,8 @@
     }
 
     .nav-button svg {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       stroke: #94a3b8;
       stroke-width: 2;
       fill: none;
@@ -130,7 +131,7 @@
     .main-content {
       flex: 1;
       height: 100vh;
-      padding: 40px;
+      padding: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -139,15 +140,13 @@
 
     .glass-card {
       width: 100%;
-      max-width: 1100px;
       height: 100%;
-      max-height: 680px;
       background: rgba(18, 28, 23, 0.35);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 24px;
-      padding: 40px;
+      border-radius: 16px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -179,47 +178,47 @@
     }
 
     .section-title {
-      font-size: 32px;
+      font-size: 24px;
       font-weight: 700;
       color: #ffffff;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       letter-spacing: -0.5px;
     }
 
     .section-description {
-      font-size: 15px;
-      line-height: 1.6;
+      font-size: 13px;
+      line-height: 1.5;
       color: #94a3b8;
       max-width: 640px;
       font-weight: 400;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
     }
 
     .stora-header-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
     .stora-header-left {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
     }
 
     .stora-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 12px 28px;
+      padding: 10px 20px;
       background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       color: #ffffff;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
       letter-spacing: 0.5px;
       border: none;
-      border-radius: 12px;
+      border-radius: 10px;
       cursor: pointer;
       transition: all 0.25s ease;
       box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
@@ -234,13 +233,13 @@
     .back-btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
+      gap: 6px;
+      padding: 6px 12px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
+      border-radius: 6px;
       color: #94a3b8;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -252,23 +251,22 @@
       border-color: rgba(255, 255, 255, 0.2);
     }
 
-    /* Icon Buttons inside STORA */
     .icon-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 8px;
+      padding: 6px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 8px;
+      border-radius: 6px;
       color: #94a3b8;
       cursor: pointer;
       transition: all 0.2s ease;
     }
 
     .icon-btn svg {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       stroke: currentColor;
       stroke-width: 2;
       fill: none;
@@ -280,13 +278,13 @@
     }
 
     .icon-btn.add-btn {
-      gap: 8px;
-      padding: 10px 18px;
+      gap: 6px;
+      padding: 8px 14px;
       background: rgba(16, 185, 129, 0.15);
       border: 1px solid rgba(52, 211, 153, 0.3);
       color: #34d399;
       font-weight: 600;
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .icon-btn.add-btn:hover {
@@ -308,13 +306,57 @@
       background: rgba(239, 68, 68, 0.15);
     }
 
+    /* Winning Years Grid Section (Max-Height Limit Removed) */
+    .years-section {
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      background: rgba(10, 16, 13, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+    }
+
+    .years-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: #a3e635;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .years-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding-right: 4px;
+    }
+
+    .year-chip {
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.03);
+      color: #475569;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.2s ease;
+    }
+
+    .year-chip.winning {
+      background: rgba(52, 211, 153, 0.18);
+      color: #34d399;
+      border-color: rgba(52, 211, 153, 0.4);
+      font-weight: 700;
+      box-shadow: 0 0 8px rgba(52, 211, 153, 0.15);
+    }
+
     /* Table Container */
     .table-container {
       width: 100%;
       flex: 1;
       overflow-x: auto;
       overflow-y: auto;
-      border-radius: 12px;
+      border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       background: rgba(10, 16, 13, 0.6);
     }
@@ -323,13 +365,13 @@
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .data-table th {
       position: sticky;
       top: 0;
-      padding: 14px 16px;
+      padding: 10px 12px;
       background: rgba(20, 32, 26, 0.95);
       color: #34d399;
       font-weight: 600;
@@ -338,8 +380,30 @@
       z-index: 2;
     }
 
+    .data-table th.sortable {
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .data-table th.sortable:hover {
+      background: rgba(30, 48, 38, 0.95);
+      color: #a3e635;
+    }
+
+    .sort-icon {
+      display: inline-block;
+      margin-left: 4px;
+      font-size: 10px;
+      opacity: 0.6;
+    }
+
+    .data-table th.sortable:hover .sort-icon {
+      opacity: 1;
+    }
+
     .data-table td {
-      padding: 12px 16px;
+      padding: 8px 12px;
       color: #cbd5e1;
       border-bottom: 1px solid rgba(255, 255, 255, 0.04);
       white-space: nowrap;
@@ -349,32 +413,36 @@
       background: rgba(255, 255, 255, 0.02);
     }
 
+    /* NASCAR Mock Number Icon Styling: Uniform unique racing font + white text with black stroke */
+    .nascar-number-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-family: 'Russo One', sans-serif;
+      font-style: italic;
+      font-size: 16px;
+      line-height: 1;
+      text-align: center;
+      min-width: 42px;
+      transform: skewX(-10deg);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      letter-spacing: 0.5px;
+      color: #ffffff;
+      text-shadow: 1px 1px 0 #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 0 2px 4px rgba(0, 0, 0, 0.8);
+    }
+
     .actions-cell {
       display: flex;
       gap: 6px;
       align-items: center;
     }
 
-    .years-tag-container {
-      display: flex;
-      gap: 4px;
-      flex-wrap: wrap;
-      max-width: 180px;
-    }
-
-    .year-tag {
-      background: rgba(52, 211, 153, 0.1);
-      color: #34d399;
-      border: 1px solid rgba(52, 211, 153, 0.2);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 500;
-    }
-
     .no-data {
       text-align: center;
-      padding: 40px !important;
+      padding: 30px !important;
       color: #64748b;
     }
 
@@ -407,10 +475,10 @@
       backdrop-filter: blur(28px);
       -webkit-backdrop-filter: blur(28px);
       border: 1px solid rgba(52, 211, 153, 0.25);
-      border-radius: 20px;
-      padding: 32px;
+      border-radius: 16px;
+      padding: 24px;
       width: 100%;
-      max-width: 580px;
+      max-width: 520px;
       max-height: 85vh;
       overflow-y: auto;
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
@@ -424,23 +492,23 @@
     }
 
     .modal-title {
-      font-size: 22px;
+      font-size: 18px;
       font-weight: 700;
       color: #ffffff;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       letter-spacing: -0.3px;
     }
 
     .form-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
+      gap: 12px;
     }
 
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
     }
 
     .form-group.full-width {
@@ -448,7 +516,7 @@
     }
 
     .form-label {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       color: #a3e635;
       text-transform: uppercase;
@@ -457,12 +525,12 @@
 
     .form-input {
       width: 100%;
-      padding: 10px 14px;
+      padding: 8px 12px;
       background: rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
+      border-radius: 8px;
       color: #ffffff;
-      font-size: 14px;
+      font-size: 13px;
       outline: none;
       transition: all 0.2s ease;
     }
@@ -476,17 +544,17 @@
     .modal-actions {
       display: flex;
       justify-content: flex-end;
-      gap: 12px;
-      margin-top: 24px;
+      gap: 10px;
+      margin-top: 18px;
     }
 
     .btn-secondary {
-      padding: 10px 20px;
+      padding: 8px 16px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
+      border-radius: 8px;
       color: #94a3b8;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -498,12 +566,12 @@
     }
 
     .btn-primary {
-      padding: 10px 20px;
+      padding: 8px 16px;
       background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       color: #ffffff;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -516,12 +584,12 @@
     }
 
     .btn-danger {
-      padding: 10px 20px;
+      padding: 8px 16px;
       background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       color: #ffffff;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -649,15 +717,14 @@
       
       <div id="hall-of-fame" class="section-view active">
         <h2 class="section-title">Hall of Fame</h2>
-        <p class="section-description">Not available.</p>
-        <button class="stora-btn" onclick="switchSection('stora-page')">STORA</button>
+        <button class="stora-btn" onclick="switchSection('stora-page')">Stock Racing</button>
       </div>
 
       <div id="stora-page" class="section-view">
         <div class="stora-header-bar">
           <div class="stora-header-left">
             <button class="back-btn" onclick="switchSection('hall-of-fame')">&larr; Back</button>
-            <h2 class="section-title" style="margin-bottom: 0;">STORA</h2>
+            <h2 class="section-title" style="margin-bottom: 0;">Stock Racing</h2>
           </div>
           <button class="icon-btn add-btn" onclick="openAddModal()">
             <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -665,21 +732,26 @@
           </button>
         </div>
 
+        <!-- Winning Years Display Grid -->
+        <div class="years-section">
+          <div class="years-section-title">Winning Years (1950 - 2026)</div>
+          <div class="years-grid" id="winning-years-grid"></div>
+        </div>
+
         <div class="table-container">
           <table class="data-table">
             <thead>
               <tr>
-                <th>Number</th>
-                <th>Name</th>
-                <th>Career Span</th>
-                <th>Races</th>
-                <th>Wins</th>
-                <th>Podiums</th>
-                <th>Poles</th>
-                <th>Titles</th>
-                <th>Title Years</th>
-                <th>Runner-up</th>
-                <th>Points</th>
+                <th class="sortable" onclick="handleSort('number')">Number <span id="sort-icon-number" class="sort-icon">↕</span></th>
+                <th class="sortable" onclick="handleSort('name')">Name <span id="sort-icon-name" class="sort-icon">↕</span></th>
+                <th class="sortable" onclick="handleSort('careerSpan')">Career Span <span id="sort-icon-careerSpan" class="sort-icon">↕</span></th>
+                <th class="sortable" onclick="handleSort('races')">Races <span id="sort-icon-races" class="sort-icon">↕</span></th>
+                <th class="sortable" onclick="handleSort('wins')">Wins <span id="sort-icon-wins" class="sort-icon">↕</span></th>
+                <th class="sortable" onclick="handleSort('podiums')">Podiums <span id="sort-icon-podiums" class="sort-icon">↕</span></th>
+                <th class="sortable" onclick="handleSort('poles')">Poles <span id="sort-icon-poles" class="sort-icon">↕</span></th>
+                <th class="sortable" onclick="handleSort('titles')">Titles <span id="sort-icon-titles" class="sort-icon">↕</span></th>
+                <th class="sortable" onclick="handleSort('runnerUp')">Runner-up <span id="sort-icon-runnerUp" class="sort-icon">↕</span></th>
+                <th class="sortable" onclick="handleSort('points')">Points <span id="sort-icon-points" class="sort-icon">↕</span></th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -786,7 +858,6 @@
     </div>
   </div>
 
-  <!-- Delete Confirmation Modal -->
   <div id="delete-modal" class="modal-overlay">
     <div class="modal-card" style="max-width: 420px;">
       <h3 class="modal-title" style="color: #f87171;">Confirm Deletion</h3>
@@ -802,8 +873,36 @@
     const STORAGE_KEY = 'datadash_stora_records';
     let records = [];
     let recordToDeleteId = null;
+    let currentSortColumn = null;
+    let currentSortDirection = 'asc';
 
-    // Switch View Navigation
+    // Vibrant NASCAR car badge background styles
+    const BADGE_STYLES = [
+      { bg: 'linear-gradient(135deg, #ef4444 0%, #991b1b 100%)', border: '#fca5a5' },
+      { bg: 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)', border: '#93c5fd' },
+      { bg: 'linear-gradient(135deg, #eab308 0%, #ca8a04 100%)', border: '#fef08a' },
+      { bg: 'linear-gradient(135deg, #10b981 0%, #047857 100%)', border: '#a7f3d0' },
+      { bg: 'linear-gradient(135deg, #a855f7 0%, #6b21a8 100%)', border: '#e9d5ff' },
+      { bg: 'linear-gradient(135deg, #f97316 0%, #c2410c 100%)', border: '#ffedd5' },
+      { bg: 'linear-gradient(135deg, #06b6d4 0%, #0e7490 100%)', border: '#cff4fc' },
+      { bg: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)', border: '#fbcfe8' },
+      { bg: 'linear-gradient(135deg, #84cc16 0%, #4d7c0f 100%)', border: '#ecfccb' },
+      { bg: 'linear-gradient(135deg, #f43f5e 0%, #9f1239 100%)', border: '#fecdd3' },
+      { bg: 'linear-gradient(135deg, #0f172a 0%, #334155 100%)', border: '#38bdf8' },
+      { bg: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)', border: '#fef3c7' }
+    ];
+
+    // Helper to generate a consistent racer badge color style based on record ID/Number
+    function getDriverBadgeStyle(key) {
+      let hash = 0;
+      const str = String(key || '0');
+      for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      const styleIdx = Math.abs(hash) % BADGE_STYLES.length;
+      return BADGE_STYLES[styleIdx];
+    }
+
     function switchSection(sectionId, element) {
       const views = document.querySelectorAll('.section-view');
       views.forEach(view => view.classList.remove('active'));
@@ -823,7 +922,6 @@
       }
     }
 
-    // LocalStorage Operations
     function loadRecords() {
       const data = localStorage.getItem(STORAGE_KEY);
       if (data) {
@@ -836,33 +934,105 @@
         records = [];
         saveRecords();
       }
-      renderTable();
+      renderAll();
     }
 
     function saveRecords() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
     }
 
-    // Render Table
+    function handleSort(column) {
+      if (currentSortColumn === column) {
+        currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        currentSortColumn = column;
+        currentSortDirection = 'asc';
+      }
+      renderAll();
+    }
+
+    function updateSortIcons() {
+      const sortableColumns = ['number', 'name', 'careerSpan', 'races', 'wins', 'podiums', 'poles', 'titles', 'runnerUp', 'points'];
+      sortableColumns.forEach(col => {
+        const iconEl = document.getElementById(`sort-icon-${col}`);
+        if (!iconEl) return;
+        if (col === currentSortColumn) {
+          iconEl.textContent = currentSortDirection === 'asc' ? '▲' : '▼';
+          iconEl.style.opacity = '1';
+        } else {
+          iconEl.textContent = '↕';
+          iconEl.style.opacity = '0.6';
+        }
+      });
+    }
+
+    function getSortedRecords() {
+      if (!currentSortColumn) return records;
+
+      return [...records].sort((a, b) => {
+        let valA = a[currentSortColumn];
+        let valB = b[currentSortColumn];
+
+        if (valA === undefined || valA === null) valA = '';
+        if (valB === undefined || valB === null) valB = '';
+
+        let res = 0;
+        if (typeof valA === 'number' && typeof valB === 'number') {
+          res = valA - valB;
+        } else {
+          res = String(valA).localeCompare(String(valB), undefined, { numeric: true, sensitivity: 'base' });
+        }
+
+        return currentSortDirection === 'asc' ? res : -res;
+      });
+    }
+
+    function renderAll() {
+      renderWinningYearsGrid();
+      renderTable();
+      updateSortIcons();
+    }
+
+    // Render Winning Years Grid (1950 - 2026)
+    function renderWinningYearsGrid() {
+      const container = document.getElementById('winning-years-grid');
+      if (!container) return;
+
+      const registeredWinningYears = new Set();
+      records.forEach(r => {
+        if (Array.isArray(r.titleYears)) {
+          r.titleYears.forEach(y => registeredWinningYears.add(Number(y)));
+        }
+      });
+
+      let html = '';
+      for (let year = 1950; year <= 2026; year++) {
+        const isWinning = registeredWinningYears.has(year);
+        html += `<span class="year-chip ${isWinning ? 'winning' : ''}">${year}</span>`;
+      }
+      container.innerHTML = html;
+    }
+
+    // Render Table (Title years removed from table columns)
     function renderTable() {
       const tbody = document.getElementById('stora-table-body');
       tbody.innerHTML = '';
 
-      if (records.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="12" class="no-data">No records found. Click "Add Record" to create one.</td></tr>`;
+      const displayedRecords = getSortedRecords();
+
+      if (displayedRecords.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="11" class="no-data">No records found. Click "Add Record" to create one.</td></tr>`;
         return;
       }
 
-      records.forEach(item => {
+      displayedRecords.forEach(item => {
         const tr = document.createElement('tr');
+        const badgeStyle = getDriverBadgeStyle(item.id || item.number || item.name);
 
-        // Formatted title years
-        const yearsTags = Array.isArray(item.titleYears) && item.titleYears.length > 0
-          ? `<div class="years-tag-container">${item.titleYears.map(y => `<span class="year-tag">${y}</span>`).join('')}</div>`
-          : '-';
+        const numberBadgeHtml = `<span class="nascar-number-badge" style="background: ${badgeStyle.bg}; border-color: ${badgeStyle.border};">${item.number ?? '-'}</span>`;
 
         tr.innerHTML = `
-          <td><strong>${item.number ?? '-'}</strong></td>
+          <td>${numberBadgeHtml}</td>
           <td>${item.name ?? '-'}</td>
           <td>${item.careerSpan ?? '-'}</td>
           <td>${item.races ?? 0}</td>
@@ -870,14 +1040,13 @@
           <td>${item.podiums ?? 0}</td>
           <td>${item.poles ?? 0}</td>
           <td>${item.titles ?? 0}</td>
-          <td>${yearsTags}</td>
           <td>${item.runnerUp ?? 0}</td>
           <td>${item.points ?? 0}</td>
           <td>
             <div class="actions-cell">
               <button class="icon-btn edit-btn" title="Edit" onclick="openEditModal('${item.id}')">
                 <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 2 2h14a2 2 0 0 2 2-2v-7"></path>
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
               </button>
@@ -894,7 +1063,6 @@
       });
     }
 
-    // Modal Helpers
     function openAddModal() {
       document.getElementById('modal-title').innerText = 'Add New Record';
       document.getElementById('stora-form').reset();
@@ -941,19 +1109,17 @@
       if (recordToDeleteId) {
         records = records.filter(r => r.id !== recordToDeleteId);
         saveRecords();
-        renderTable();
+        renderAll();
       }
       closeDeleteModal();
     }
 
-    // Submit Create/Edit
     function handleFormSubmit(e) {
       e.preventDefault();
 
       const id = document.getElementById('record-id').value;
       const titleYearsInput = document.getElementById('field-titleYears').value;
       
-      // Parse Title Years input into array
       const titleYearsArr = titleYearsInput
         .split(',')
         .map(y => parseInt(y.trim()))
@@ -984,11 +1150,10 @@
       }
 
       saveRecords();
-      renderTable();
+      renderAll();
       closeFormModal();
     }
 
-    // Initialize on page load
     window.addEventListener('DOMContentLoaded', loadRecords);
   </script>
 </body>
