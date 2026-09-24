@@ -76,6 +76,7 @@
       flex-direction: column;
       gap: 8px;
       list-style: none;
+      overflow-y: auto;
     }
 
     .nav-button {
@@ -138,18 +139,18 @@
 
     .glass-card {
       width: 100%;
-      max-width: 900px;
+      max-width: 1100px;
       height: 100%;
-      max-height: 600px;
+      max-height: 680px;
       background: rgba(18, 28, 23, 0.35);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 24px;
-      padding: 56px;
+      padding: 40px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       position: relative;
       overflow: hidden;
       box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
@@ -168,26 +169,368 @@
     .section-view {
       display: none;
       animation: fadeIn 0.4s ease forwards;
+      width: 100%;
+      height: 100%;
     }
 
     .section-view.active {
-      display: block;
+      display: flex;
+      flex-direction: column;
     }
 
     .section-title {
-      font-size: 36px;
+      font-size: 32px;
       font-weight: 700;
       color: #ffffff;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       letter-spacing: -0.5px;
     }
 
     .section-description {
-      font-size: 16px;
+      font-size: 15px;
       line-height: 1.6;
       color: #94a3b8;
       max-width: 640px;
       font-weight: 400;
+      margin-bottom: 24px;
+    }
+
+    .stora-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .stora-header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .stora-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 28px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
+    }
+
+    .stora-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+      background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Icon Buttons inside STORA */
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      color: #94a3b8;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .icon-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+    }
+
+    .icon-btn.add-btn {
+      gap: 8px;
+      padding: 10px 18px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      color: #34d399;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .icon-btn.add-btn:hover {
+      background: rgba(16, 185, 129, 0.25);
+      border-color: rgba(52, 211, 153, 0.5);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    }
+
+    .icon-btn.edit-btn:hover {
+      color: #34d399;
+      border-color: rgba(52, 211, 153, 0.3);
+      background: rgba(16, 185, 129, 0.15);
+    }
+
+    .icon-btn.delete-btn:hover {
+      color: #f87171;
+      border-color: rgba(248, 113, 113, 0.3);
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    /* Table Container */
+    .table-container {
+      width: 100%;
+      flex: 1;
+      overflow-x: auto;
+      overflow-y: auto;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(10, 16, 13, 0.6);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .data-table th {
+      position: sticky;
+      top: 0;
+      padding: 14px 16px;
+      background: rgba(20, 32, 26, 0.95);
+      color: #34d399;
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      white-space: nowrap;
+      z-index: 2;
+    }
+
+    .data-table td {
+      padding: 12px 16px;
+      color: #cbd5e1;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      white-space: nowrap;
+    }
+
+    .data-table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .actions-cell {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .years-tag-container {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      max-width: 180px;
+    }
+
+    .year-tag {
+      background: rgba(52, 211, 153, 0.1);
+      color: #34d399;
+      border: 1px solid rgba(52, 211, 153, 0.2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 40px !important;
+      color: #64748b;
+    }
+
+    /* Glassmorphism Popup / Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: rgba(15, 23, 19, 0.85);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(52, 211, 153, 0.25);
+      border-radius: 20px;
+      padding: 32px;
+      width: 100%;
+      max-width: 580px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+      transform: scale(0.92);
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: scale(1);
+    }
+
+    .modal-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 20px;
+      letter-spacing: -0.3px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #a3e635;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      color: #ffffff;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus {
+      border-color: #34d399;
+      box-shadow: 0 0 10px rgba(52, 211, 153, 0.2);
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn-secondary {
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-primary {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border: none;
+      border-radius: 10px;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+    }
+
+    .btn-danger {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      border: none;
+      border-radius: 10px;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+    }
+
+    .btn-danger:hover {
+      background: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+      box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
     }
 
     @keyframes fadeIn {
@@ -221,6 +564,16 @@
             <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path>
           </svg>
           Hall of Fame
+        </button>
+      </li>
+      <li>
+        <button class="nav-button" onclick="switchSection('knockout-module', this)">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M8 12h8"></path>
+            <path d="M12 8v8"></path>
+          </svg>
+          Knockout Module
         </button>
       </li>
       <li>
@@ -297,6 +650,48 @@
       <div id="hall-of-fame" class="section-view active">
         <h2 class="section-title">Hall of Fame</h2>
         <p class="section-description">Not available.</p>
+        <button class="stora-btn" onclick="switchSection('stora-page')">STORA</button>
+      </div>
+
+      <div id="stora-page" class="section-view">
+        <div class="stora-header-bar">
+          <div class="stora-header-left">
+            <button class="back-btn" onclick="switchSection('hall-of-fame')">&larr; Back</button>
+            <h2 class="section-title" style="margin-bottom: 0;">STORA</h2>
+          </div>
+          <button class="icon-btn add-btn" onclick="openAddModal()">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Add Record
+          </button>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Number</th>
+                <th>Name</th>
+                <th>Career Span</th>
+                <th>Races</th>
+                <th>Wins</th>
+                <th>Podiums</th>
+                <th>Poles</th>
+                <th>Titles</th>
+                <th>Title Years</th>
+                <th>Runner-up</th>
+                <th>Points</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="stora-table-body">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="knockout-module" class="section-view">
+        <h2 class="section-title">Knockout Module</h2>
+        <p class="section-description">Not available.</p>
       </div>
 
       <div id="check-center" class="section-view">
@@ -332,7 +727,83 @@
     </div>
   </main>
 
+  <div id="form-modal" class="modal-overlay">
+    <div class="modal-card">
+      <h3 id="modal-title" class="modal-title">Add New Record</h3>
+      <form id="stora-form" onsubmit="handleFormSubmit(event)">
+        <input type="hidden" id="record-id">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="field-number">Number</label>
+            <input id="field-number" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-name">Name</label>
+            <input id="field-name" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-careerSpan">Career Span</label>
+            <input id="field-careerSpan" class="form-input" placeholder="e.g. 2007-Present">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-races">Races</label>
+            <input id="field-races" class="form-input" min="0" value="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-wins">Wins</label>
+            <input id="field-wins" class="form-input" min="0" value="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-podiums">Podiums</label>
+            <input id="field-podiums" class="form-input" min="0" value="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-poles">Poles</label>
+            <input id="field-poles" class="form-input" min="0" value="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-titles">Titles</label>
+            <input id="field-titles" class="form-input" min="0" value="0">
+          </div>
+          <div class="form-group full-width">
+            <label class="form-label" for="field-titleYears">Title Years (Comma Separated Array)</label>
+            <input id="field-titleYears" class="form-input" placeholder="e.g. 2008, 2014, 2015, 2017">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-runnerUp">Runner-up</label>
+            <input id="field-runnerUp" class="form-input" min="0" value="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-points">Points</label>
+            <input step="0.5" id="field-points" class="form-input" min="0" value="0">
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeFormModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Save Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="delete-modal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 420px;">
+      <h3 class="modal-title" style="color: #f87171;">Confirm Deletion</h3>
+      <p class="section-description" style="margin-bottom: 20px;">Are you sure you want to delete this record? This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+        <button type="button" class="btn-danger" onclick="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+
   <script>
+    const STORAGE_KEY = 'datadash_stora_records';
+    let records = [];
+    let recordToDeleteId = null;
+
+    // Switch View Navigation
     function switchSection(sectionId, element) {
       const views = document.querySelectorAll('.section-view');
       views.forEach(view => view.classList.remove('active'));
@@ -340,9 +811,185 @@
       const buttons = document.querySelectorAll('.nav-button');
       buttons.forEach(button => button.classList.remove('active'));
 
-      document.getElementById(sectionId).classList.add('active');
-      element.classList.add('active');
+      const targetView = document.getElementById(sectionId);
+      if (targetView) {
+        targetView.classList.add('active');
+      }
+
+      if (element && element.classList.contains('nav-button')) {
+        element.classList.add('active');
+      } else if (sectionId === 'hall-of-fame' || sectionId === 'stora-page') {
+        buttons[0].classList.add('active');
+      }
     }
+
+    // LocalStorage Operations
+    function loadRecords() {
+      const data = localStorage.getItem(STORAGE_KEY);
+      if (data) {
+        try {
+          records = JSON.parse(data);
+        } catch (e) {
+          records = [];
+        }
+      } else {
+        records = [];
+        saveRecords();
+      }
+      renderTable();
+    }
+
+    function saveRecords() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    }
+
+    // Render Table
+    function renderTable() {
+      const tbody = document.getElementById('stora-table-body');
+      tbody.innerHTML = '';
+
+      if (records.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="12" class="no-data">No records found. Click "Add Record" to create one.</td></tr>`;
+        return;
+      }
+
+      records.forEach(item => {
+        const tr = document.createElement('tr');
+
+        // Formatted title years
+        const yearsTags = Array.isArray(item.titleYears) && item.titleYears.length > 0
+          ? `<div class="years-tag-container">${item.titleYears.map(y => `<span class="year-tag">${y}</span>`).join('')}</div>`
+          : '-';
+
+        tr.innerHTML = `
+          <td><strong>${item.number ?? '-'}</strong></td>
+          <td>${item.name ?? '-'}</td>
+          <td>${item.careerSpan ?? '-'}</td>
+          <td>${item.races ?? 0}</td>
+          <td>${item.wins ?? 0}</td>
+          <td>${item.podiums ?? 0}</td>
+          <td>${item.poles ?? 0}</td>
+          <td>${item.titles ?? 0}</td>
+          <td>${yearsTags}</td>
+          <td>${item.runnerUp ?? 0}</td>
+          <td>${item.points ?? 0}</td>
+          <td>
+            <div class="actions-cell">
+              <button class="icon-btn edit-btn" title="Edit" onclick="openEditModal('${item.id}')">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+              <button class="icon-btn delete-btn" title="Delete" onclick="openDeleteModal('${item.id}')">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Modal Helpers
+    function openAddModal() {
+      document.getElementById('modal-title').innerText = 'Add New Record';
+      document.getElementById('stora-form').reset();
+      document.getElementById('record-id').value = '';
+      document.getElementById('form-modal').classList.add('active');
+    }
+
+    function openEditModal(id) {
+      const record = records.find(r => r.id === id);
+      if (!record) return;
+
+      document.getElementById('modal-title').innerText = 'Edit Record';
+      document.getElementById('record-id').value = record.id;
+      document.getElementById('field-number').value = record.number ?? '';
+      document.getElementById('field-name').value = record.name ?? '';
+      document.getElementById('field-careerSpan').value = record.careerSpan ?? '';
+      document.getElementById('field-races').value = record.races ?? 0;
+      document.getElementById('field-wins').value = record.wins ?? 0;
+      document.getElementById('field-podiums').value = record.podiums ?? 0;
+      document.getElementById('field-poles').value = record.poles ?? 0;
+      document.getElementById('field-titles').value = record.titles ?? 0;
+      document.getElementById('field-titleYears').value = Array.isArray(record.titleYears) ? record.titleYears.join(', ') : '';
+      document.getElementById('field-runnerUp').value = record.runnerUp ?? 0;
+      document.getElementById('field-points').value = record.points ?? 0;
+
+      document.getElementById('form-modal').classList.add('active');
+    }
+
+    function closeFormModal() {
+      document.getElementById('form-modal').classList.remove('active');
+    }
+
+    function openDeleteModal(id) {
+      recordToDeleteId = id;
+      document.getElementById('delete-modal').classList.add('active');
+    }
+
+    function closeDeleteModal() {
+      recordToDeleteId = null;
+      document.getElementById('delete-modal').classList.remove('active');
+    }
+
+    function confirmDelete() {
+      if (recordToDeleteId) {
+        records = records.filter(r => r.id !== recordToDeleteId);
+        saveRecords();
+        renderTable();
+      }
+      closeDeleteModal();
+    }
+
+    // Submit Create/Edit
+    function handleFormSubmit(e) {
+      e.preventDefault();
+
+      const id = document.getElementById('record-id').value;
+      const titleYearsInput = document.getElementById('field-titleYears').value;
+      
+      // Parse Title Years input into array
+      const titleYearsArr = titleYearsInput
+        .split(',')
+        .map(y => parseInt(y.trim()))
+        .filter(y => !isNaN(y));
+
+      const recordData = {
+        id: id ? id : Date.now().toString(),
+        number: parseInt(document.getElementById('field-number').value) || 0,
+        name: document.getElementById('field-name').value.trim(),
+        careerSpan: document.getElementById('field-careerSpan').value.trim(),
+        races: parseInt(document.getElementById('field-races').value) || 0,
+        wins: parseInt(document.getElementById('field-wins').value) || 0,
+        podiums: parseInt(document.getElementById('field-podiums').value) || 0,
+        poles: parseInt(document.getElementById('field-poles').value) || 0,
+        titles: parseInt(document.getElementById('field-titles').value) || 0,
+        titleYears: titleYearsArr,
+        runnerUp: parseInt(document.getElementById('field-runnerUp').value) || 0,
+        points: parseFloat(document.getElementById('field-points').value) || 0
+      };
+
+      if (id) {
+        const index = records.findIndex(r => r.id === id);
+        if (index !== -1) {
+          records[index] = recordData;
+        }
+      } else {
+        records.push(recordData);
+      }
+
+      saveRecords();
+      renderTable();
+      closeFormModal();
+    }
+
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', loadRecords);
   </script>
 </body>
 </html>
