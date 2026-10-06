@@ -194,6 +194,13 @@
       margin-bottom: 16px;
     }
 
+    .hall-of-fame-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
     .stora-header-bar {
       display: flex;
       align-items: center;
@@ -306,7 +313,6 @@
       background: rgba(239, 68, 68, 0.15);
     }
 
-    /* Winning Years Grid Section (Max-Height Limit Removed) */
     .years-section {
       margin-bottom: 12px;
       padding: 10px 12px;
@@ -350,7 +356,6 @@
       box-shadow: 0 0 8px rgba(52, 211, 153, 0.15);
     }
 
-    /* Table Container */
     .table-container {
       width: 100%;
       flex: 1;
@@ -413,7 +418,16 @@
       background: rgba(255, 255, 255, 0.02);
     }
 
-    /* NASCAR Mock Number Icon Styling: Uniform unique racing font + white text with black stroke */
+    .flag-img {
+      width: 28px;
+      height: 20px;
+      object-fit: cover;
+      border-radius: 3px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      vertical-align: middle;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
     .nascar-number-badge {
       display: inline-flex;
       align-items: center;
@@ -446,7 +460,6 @@
       color: #64748b;
     }
 
-    /* Glassmorphism Popup / Modal Styles */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -717,7 +730,10 @@
       
       <div id="hall-of-fame" class="section-view active">
         <h2 class="section-title">Hall of Fame</h2>
-        <button class="stora-btn" onclick="switchSection('stora-page')">Stock Racing</button>
+        <div class="hall-of-fame-buttons">
+          <button class="stora-btn" onclick="switchSection('stora-page')">Stock Racing</button>
+          <button class="stora-btn" onclick="switchSection('soccer-page')">Soccer Association</button>
+        </div>
       </div>
 
       <div id="stora-page" class="section-view">
@@ -732,7 +748,6 @@
           </button>
         </div>
 
-        <!-- Winning Years Display Grid -->
         <div class="years-section">
           <div class="years-section-title">Winning Years (1950 - 2026)</div>
           <div class="years-grid" id="winning-years-grid"></div>
@@ -756,6 +771,42 @@
               </tr>
             </thead>
             <tbody id="stora-table-body">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="soccer-page" class="section-view">
+        <div class="stora-header-bar">
+          <div class="stora-header-left">
+            <button class="back-btn" onclick="switchSection('hall-of-fame')">&larr; Back</button>
+            <h2 class="section-title" style="margin-bottom: 0;">Soccer Association</h2>
+          </div>
+          <button class="icon-btn add-btn" onclick="openAddSoccerModal()">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Add Record
+          </button>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Flag</th>
+                <th class="sortable" onclick="handleSoccerSort('name')">Name <span id="soccer-sort-icon-name" class="sort-icon">↕</span></th>
+                <th class="sortable" onclick="handleSoccerSort('position')">Position <span id="soccer-sort-icon-position" class="sort-icon">↕</span></th>
+                <th class="sortable" onclick="handleSoccerSort('careerSpan')">Career Span <span id="soccer-sort-icon-careerSpan" class="sort-icon">↕</span></th>
+                <th class="sortable" onclick="handleSoccerSort('matches')">Matches <span id="soccer-sort-icon-matches" class="sort-icon">↕</span></th>
+                <th class="sortable" onclick="handleSoccerSort('goals')">Goals <span id="soccer-sort-icon-goals" class="sort-icon">↕</span></th>
+                <th class="sortable" onclick="handleSoccerSort('assists')">Assists <span id="soccer-sort-icon-assists" class="sort-icon">↕</span></th>
+                <th class="sortable" onclick="handleSoccerSort('titles')">Titles <span id="soccer-sort-icon-titles" class="sort-icon">↕</span></th>
+                <th class="sortable" onclick="handleSoccerSort('nationalMatches')">Nat. Matches <span id="soccer-sort-icon-nationalMatches" class="sort-icon">↕</span></th>
+                <th class="sortable" onclick="handleSoccerSort('nationalGoals')">Nat. Goals <span id="soccer-sort-icon-nationalGoals" class="sort-icon">↕</span></th>
+                <th class="sortable" onclick="handleSoccerSort('nationalAssists')">Nat. Assists <span id="soccer-sort-icon-nationalAssists" class="sort-icon">↕</span></th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="soccer-table-body">
             </tbody>
           </table>
         </div>
@@ -799,6 +850,7 @@
     </div>
   </main>
 
+  <!-- Stock Racing Form Modal -->
   <div id="form-modal" class="modal-overlay">
     <div class="modal-card">
       <h3 id="modal-title" class="modal-title">Add New Record</h3>
@@ -834,7 +886,7 @@
             <input id="field-poles" class="form-input" min="0" value="0">
           </div>
           <div class="form-group">
-            <label class="form-label" for="field-titles">Titles</label>
+            <label class="form-label" for="field-titles">Trophies</label>
             <input id="field-titles" class="form-input" min="0" value="0">
           </div>
           <div class="form-group full-width">
@@ -858,6 +910,7 @@
     </div>
   </div>
 
+  <!-- Stock Racing Delete Modal -->
   <div id="delete-modal" class="modal-overlay">
     <div class="modal-card" style="max-width: 420px;">
       <h3 class="modal-title" style="color: #f87171;">Confirm Deletion</h3>
@@ -869,14 +922,86 @@
     </div>
   </div>
 
+  <!-- Soccer Association Form Modal -->
+  <div id="soccer-form-modal" class="modal-overlay">
+    <div class="modal-card">
+      <h3 id="soccer-modal-title" class="modal-title">Add New Soccer Record</h3>
+      <form id="soccer-form" onsubmit="handleSoccerFormSubmit(event)">
+        <input type="hidden" id="field-soccer-id">
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label class="form-label" for="field-soccer-flagUrl">Flag URL (Post Render)</label>
+            <input id="field-soccer-flagUrl" class="form-input" placeholder="https://flagcdn.com/w40/flag.png">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-soccer-name">Name</label>
+            <input id="field-soccer-name" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-soccer-position">Position</label>
+            <input id="field-soccer-position" class="form-input" placeholder="e.g. Forward, Midfielder" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-soccer-careerSpan">Career Span (Age)</label>
+            <input id="field-soccer-careerSpan" class="form-input" placeholder="e.g. 2000-Present (26)">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-soccer-matches">Matches</label>
+            <input id="field-soccer-matches" class="form-input" min="0" value="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-soccer-goals">Goals</label>
+            <input id="field-soccer-goals" class="form-input" min="0" value="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-soccer-assists">Assists</label>
+            <input id="field-soccer-assists" class="form-input" min="0" value="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-soccer-titles">Trophies</label>
+            <input id="field-soccer-titles" class="form-input" min="0" value="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-soccer-nationalMatches">Nat. Matches</label>
+            <input id="field-soccer-nationalMatches" class="form-input" min="0" value="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-soccer-nationalGoals">Nat. Goals</label>
+            <input id="field-soccer-nationalGoals" class="form-input" min="0" value="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-soccer-nationalAssists">Nat. Assists</label>
+            <input id="field-soccer-nationalAssists" class="form-input" min="0" value="0">
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeSoccerFormModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Save Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Soccer Association Delete Modal -->
+  <div id="soccer-delete-modal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 420px;">
+      <h3 class="modal-title" style="color: #f87171;">Confirm Deletion</h3>
+      <p class="section-description" style="margin-bottom: 20px;">Are you sure you want to delete this soccer record? This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" onclick="closeSoccerDeleteModal()">Cancel</button>
+        <button type="button" class="btn-danger" onclick="confirmSoccerDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+
   <script>
+    /* ---------------- Stock Racing Data & Logic ---------------- */
     const STORAGE_KEY = 'datadash_stora_records';
     let records = [];
     let recordToDeleteId = null;
     let currentSortColumn = null;
     let currentSortDirection = 'asc';
 
-    // Vibrant NASCAR car badge background styles
     const BADGE_STYLES = [
       { bg: 'linear-gradient(135deg, #ef4444 0%, #991b1b 100%)', border: '#fca5a5' },
       { bg: 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)', border: '#93c5fd' },
@@ -892,7 +1017,6 @@
       { bg: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)', border: '#fef3c7' }
     ];
 
-    // Helper to generate a consistent racer badge color style based on record ID/Number
     function getDriverBadgeStyle(key) {
       let hash = 0;
       const str = String(key || '0');
@@ -917,7 +1041,7 @@
 
       if (element && element.classList.contains('nav-button')) {
         element.classList.add('active');
-      } else if (sectionId === 'hall-of-fame' || sectionId === 'stora-page') {
+      } else if (sectionId === 'hall-of-fame' || sectionId === 'stora-page' || sectionId === 'soccer-page') {
         buttons[0].classList.add('active');
       }
     }
@@ -993,7 +1117,6 @@
       updateSortIcons();
     }
 
-    // Render Winning Years Grid (1950 - 2026)
     function renderWinningYearsGrid() {
       const container = document.getElementById('winning-years-grid');
       if (!container) return;
@@ -1013,7 +1136,6 @@
       container.innerHTML = html;
     }
 
-    // Render Table (Title years removed from table columns)
     function renderTable() {
       const tbody = document.getElementById('stora-table-body');
       tbody.innerHTML = '';
@@ -1154,7 +1276,220 @@
       closeFormModal();
     }
 
-    window.addEventListener('DOMContentLoaded', loadRecords);
+    /* ---------------- Soccer Association Data & Logic ---------------- */
+    const SOCCER_STORAGE_KEY = 'datadash_soccer_records';
+    let soccerRecords = [];
+    let soccerRecordToDeleteId = null;
+    let currentSoccerSortColumn = null;
+    let currentSoccerSortDirection = 'asc';
+
+    function loadSoccerRecords() {
+      const data = localStorage.getItem(SOCCER_STORAGE_KEY);
+      if (data) {
+        try {
+          soccerRecords = JSON.parse(data);
+        } catch (e) {
+          soccerRecords = [];
+        }
+      } else {
+        soccerRecords = [];
+        saveSoccerRecords();
+      }
+      renderSoccerTable();
+    }
+
+    function saveSoccerRecords() {
+      localStorage.setItem(SOCCER_STORAGE_KEY, JSON.stringify(soccerRecords));
+    }
+
+    function handleSoccerSort(column) {
+      if (currentSoccerSortColumn === column) {
+        currentSoccerSortDirection = currentSoccerSortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        currentSoccerSortColumn = column;
+        currentSoccerSortDirection = 'asc';
+      }
+      renderSoccerTable();
+    }
+
+    function updateSoccerSortIcons() {
+      const sortableColumns = ['name', 'position', 'careerSpan', 'matches', 'goals', 'assists', 'titles', 'nationalMatches', 'nationalGoals', 'nationalAssists'];
+      sortableColumns.forEach(col => {
+        const iconEl = document.getElementById(`soccer-sort-icon-${col}`);
+        if (!iconEl) return;
+        if (col === currentSoccerSortColumn) {
+          iconEl.textContent = currentSoccerSortDirection === 'asc' ? '▲' : '▼';
+          iconEl.style.opacity = '1';
+        } else {
+          iconEl.textContent = '↕';
+          iconEl.style.opacity = '0.6';
+        }
+      });
+    }
+
+    function getSortedSoccerRecords() {
+      if (!currentSoccerSortColumn) return soccerRecords;
+
+      return [...soccerRecords].sort((a, b) => {
+        let valA = a[currentSoccerSortColumn];
+        let valB = b[currentSoccerSortColumn];
+
+        if (valA === undefined || valA === null) valA = '';
+        if (valB === undefined || valB === null) valB = '';
+
+        let res = 0;
+        if (typeof valA === 'number' && typeof valB === 'number') {
+          res = valA - valB;
+        } else {
+          res = String(valA).localeCompare(String(valB), undefined, { numeric: true, sensitivity: 'base' });
+        }
+
+        return currentSoccerSortDirection === 'asc' ? res : -res;
+      });
+    }
+
+    function renderSoccerTable() {
+      const tbody = document.getElementById('soccer-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const displayed = getSortedSoccerRecords();
+
+      if (displayed.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="12" class="no-data">No soccer records found. Click "Add Record" to create one.</td></tr>`;
+        return;
+      }
+
+      displayed.forEach(item => {
+        const tr = document.createElement('tr');
+        const flagImgHtml = item.flagUrl 
+          ? `<img src="${item.flagUrl}" alt="Flag" class="flag-img" onerror="this.onerror=null;this.replaceWith(document.createTextNode('🏳️'))">` 
+          : '🏳️';
+
+        tr.innerHTML = `
+          <td>${flagImgHtml}</td>
+          <td>${item.name ?? '-'}</td>
+          <td>${item.position ?? '-'}</td>
+          <td>${item.careerSpan ?? '-'}</td>
+          <td>${item.matches ?? 0}</td>
+          <td>${item.goals ?? 0}</td>
+          <td>${item.assists ?? 0}</td>
+          <td>${item.titles ?? 0}</td>
+          <td>${item.nationalMatches ?? 0}</td>
+          <td>${item.nationalGoals ?? 0}</td>
+          <td>${item.nationalAssists ?? 0}</td>
+          <td>
+            <div class="actions-cell">
+              <button class="icon-btn edit-btn" title="Edit" onclick="openEditSoccerModal('${item.id}')">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 2 2h14a2 2 0 0 2 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+              <button class="icon-btn delete-btn" title="Delete" onclick="openDeleteSoccerModal('${item.id}')">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      updateSoccerSortIcons();
+    }
+
+    function openAddSoccerModal() {
+      document.getElementById('soccer-modal-title').innerText = 'Add New Soccer Record';
+      document.getElementById('soccer-form').reset();
+      document.getElementById('field-soccer-id').value = '';
+      document.getElementById('soccer-form-modal').classList.add('active');
+    }
+
+    function openEditSoccerModal(id) {
+      const record = soccerRecords.find(r => r.id === id);
+      if (!record) return;
+
+      document.getElementById('soccer-modal-title').innerText = 'Edit Soccer Record';
+      document.getElementById('field-soccer-id').value = record.id;
+      document.getElementById('field-soccer-flagUrl').value = record.flagUrl ?? '';
+      document.getElementById('field-soccer-name').value = record.name ?? '';
+      document.getElementById('field-soccer-position').value = record.position ?? '';
+      document.getElementById('field-soccer-careerSpan').value = record.careerSpan ?? '';
+      document.getElementById('field-soccer-matches').value = record.matches ?? 0;
+      document.getElementById('field-soccer-goals').value = record.goals ?? 0;
+      document.getElementById('field-soccer-assists').value = record.assists ?? 0;
+      document.getElementById('field-soccer-titles').value = record.titles ?? 0;
+      document.getElementById('field-soccer-nationalMatches').value = record.nationalMatches ?? 0;
+      document.getElementById('field-soccer-nationalGoals').value = record.nationalGoals ?? 0;
+      document.getElementById('field-soccer-nationalAssists').value = record.nationalAssists ?? 0;
+
+      document.getElementById('soccer-form-modal').classList.add('active');
+    }
+
+    function closeSoccerFormModal() {
+      document.getElementById('soccer-form-modal').classList.remove('active');
+    }
+
+    function openDeleteSoccerModal(id) {
+      soccerRecordToDeleteId = id;
+      document.getElementById('soccer-delete-modal').classList.add('active');
+    }
+
+    function closeSoccerDeleteModal() {
+      soccerRecordToDeleteId = null;
+      document.getElementById('soccer-delete-modal').classList.remove('active');
+    }
+
+    function confirmSoccerDelete() {
+      if (soccerRecordToDeleteId) {
+        soccerRecords = soccerRecords.filter(r => r.id !== soccerRecordToDeleteId);
+        saveSoccerRecords();
+        renderSoccerTable();
+      }
+      closeSoccerDeleteModal();
+    }
+
+    function handleSoccerFormSubmit(e) {
+      e.preventDefault();
+
+      const id = document.getElementById('field-soccer-id').value;
+
+      const recordData = {
+        id: id ? id : 'soccer-' + Date.now().toString(),
+        flagUrl: document.getElementById('field-soccer-flagUrl').value.trim(),
+        name: document.getElementById('field-soccer-name').value.trim(),
+        position: document.getElementById('field-soccer-position').value.trim(),
+        careerSpan: document.getElementById('field-soccer-careerSpan').value.trim(),
+        matches: parseInt(document.getElementById('field-soccer-matches').value) || 0,
+        goals: parseInt(document.getElementById('field-soccer-goals').value) || 0,
+        assists: parseInt(document.getElementById('field-soccer-assists').value) || 0,
+        titles: parseInt(document.getElementById('field-soccer-titles').value) || 0,
+        nationalMatches: parseInt(document.getElementById('field-soccer-nationalMatches').value) || 0,
+        nationalGoals: parseInt(document.getElementById('field-soccer-nationalGoals').value) || 0,
+        nationalAssists: parseInt(document.getElementById('field-soccer-nationalAssists').value) || 0
+      };
+
+      if (id) {
+        const index = soccerRecords.findIndex(r => r.id === id);
+        if (index !== -1) {
+          soccerRecords[index] = recordData;
+        }
+      } else {
+        soccerRecords.push(recordData);
+      }
+
+      saveSoccerRecords();
+      renderSoccerTable();
+      closeSoccerFormModal();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadRecords();
+      loadSoccerRecords();
+    });
   </script>
 </body>
 </html>
