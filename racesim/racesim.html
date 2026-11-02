@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Corrida Histórica (1950+)</title>
+    <title>Simulador de Corrida Histórica</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -13,7 +13,7 @@
                     colors: {
                         gpred: '#e10600',
                         gpdark: '#15151e',
-                        gpcard: '#1gpf27',
+                        gpcard: '#1f1f27',
                         gpgold: '#d4af37'
                     }
                 }
@@ -153,12 +153,16 @@
 
         <section id="view-races" class="tab-content hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="bg-gpcard rounded-xl border border-zinc-800 p-4 h-fit">
-                    <h2 class="text-base font-bold text-white mb-3 flex items-center gap-2">
-                        <i data-lucide="calendar" class="text-gpred"></i> Calendário do Campeonato
-                    </h2>
+                <div class="bg-gpcard rounded-xl border border-zinc-800 p-4 h-fit space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <i data-lucide="calendar" class="text-gpred"></i> Calendário
+                        </h2>
+                        <button onclick="openRaceModal()" class="bg-gpred hover:bg-red-700 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1">
+                            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Novo GP
+                        </button>
+                    </div>
                     <div id="race-list" class="space-y-2">
-                        <!-- Preenchido via JS -->
                     </div>
                 </div>
 
@@ -168,7 +172,11 @@
                             <h2 id="race-detail-title" class="text-xl font-bold text-white">Selecione uma corrida</h2>
                             <p id="race-detail-subtitle" class="text-xs text-zinc-400">Resultados completos e incidentes</p>
                         </div>
-                        <span id="race-detail-status" class="px-3 py-1 rounded-full text-xs font-semibold bg-zinc-800 text-zinc-400">Não Realizada</span>
+                        <div class="flex items-center gap-2">
+                            <button id="btn-edit-race" onclick="openRaceModal(state.selectedRaceId)" class="hidden text-xs bg-zinc-800 hover:bg-zinc-700 text-white px-3 py-1 rounded-lg border border-zinc-700">Editar</button>
+                            <button id="btn-delete-race" onclick="deleteRace(state.selectedRaceId)" class="hidden text-xs bg-red-950 hover:bg-red-900 text-red-300 px-3 py-1 rounded-lg border border-red-800">Excluir</button>
+                            <span id="race-detail-status" class="px-3 py-1 rounded-full text-xs font-semibold bg-zinc-800 text-zinc-400">Não Realizada</span>
+                        </div>
                     </div>
 
                     <div id="race-incidents-box" class="hidden mb-4 p-3 bg-red-950/40 border border-red-800/60 rounded-lg text-sm text-red-200">
@@ -233,7 +241,12 @@
                             <input type="range" id="setting-mortality" min="0" max="20" step="0.5" class="w-full accent-gpred">
                             <span id="setting-mortality-val" class="text-gpgold font-bold text-lg min-w-[50px]">5%</span>
                         </div>
-                        <p class="text-xs text-zinc-500 mt-1">Chance aleatória de um piloto falecer durante um GP da temporada clássica.</p>
+                    </div>
+
+                    <div class="pt-4 border-t border-zinc-800 flex flex-col gap-3">
+                        <button onclick="randomizeAllStars()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2.5 px-4 rounded-lg text-sm flex items-center justify-center gap-2">
+                            <i data-lucide="star" class="w-4 h-4"></i> Aleatorizar Estrelas de Equipes e Pilotos (1 a 5)
+                        </button>
                     </div>
 
                     <div class="pt-4 border-t border-zinc-800 flex flex-wrap gap-3">
@@ -265,6 +278,16 @@
                 <label class="block text-xs text-zinc-400 mb-1">Bandeira / País (Emoji)</label>
                 <input type="text" id="team-flag" placeholder="🇬🇧" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white">
             </div>
+            <div>
+                <label class="block text-xs text-zinc-400 mb-1">Qualidade do Carro (Estrelas: 1 a 5)</label>
+                <select id="team-stars" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white">
+                    <option value="1">⭐ 1 Estrela</option>
+                    <option value="2">⭐⭐ 2 Estrelas</option>
+                    <option value="3" selected>⭐⭐⭐ 3 Estrelas</option>
+                    <option value="4">⭐⭐⭐⭐ 4 Estrelas</option>
+                    <option value="5">⭐⭐⭐⭐⭐ 5 Estrelas</option>
+                </select>
+            </div>
             <div class="flex justify-end gap-2 pt-2">
                 <button onclick="closeModals()" class="px-4 py-2 bg-zinc-800 text-zinc-300 rounded-lg text-xs font-semibold">Cancelar</button>
                 <button onclick="saveTeam()" class="px-4 py-2 bg-gpred text-white rounded-lg text-xs font-bold">Salvar</button>
@@ -289,9 +312,42 @@
                 <select id="driver-team-select" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white">
                 </select>
             </div>
+            <div>
+                <label class="block text-xs text-zinc-400 mb-1">Habilidade do Piloto (Estrelas: 1 a 5)</label>
+                <select id="driver-stars" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white">
+                    <option value="1">⭐ 1 Estrela</option>
+                    <option value="2">⭐⭐ 2 Estrelas</option>
+                    <option value="3" selected>⭐⭐⭐ 3 Estrelas</option>
+                    <option value="4">⭐⭐⭐⭐ 4 Estrelas</option>
+                    <option value="5">⭐⭐⭐⭐⭐ 5 Estrelas</option>
+                </select>
+            </div>
             <div class="flex justify-end gap-2 pt-2">
                 <button onclick="closeModals()" class="px-4 py-2 bg-zinc-800 text-zinc-300 rounded-lg text-xs font-semibold">Cancelar</button>
                 <button onclick="saveDriver()" class="px-4 py-2 bg-gpred text-white rounded-lg text-xs font-bold">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-race" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-gpcard border border-zinc-700 rounded-xl p-6 w-full max-w-md space-y-4">
+            <h3 id="modal-race-title" class="text-lg font-bold text-white">Adicionar Grande Prêmio</h3>
+            <input type="hidden" id="edit-race-id">
+            <div>
+                <label class="block text-xs text-zinc-400 mb-1">Nome do GP</label>
+                <input type="text" id="race-name" placeholder="GP do Brasil" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white">
+            </div>
+            <div>
+                <label class="block text-xs text-zinc-400 mb-1">Circuito / Pista</label>
+                <input type="text" id="race-track" placeholder="Corrida do Rio" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white">
+            </div>
+            <div>
+                <label class="block text-xs text-zinc-400 mb-1">Bandeira / País (Emoji)</label>
+                <input type="text" id="race-flag" placeholder="🇧🇷" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white">
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeModals()" class="px-4 py-2 bg-zinc-800 text-zinc-300 rounded-lg text-xs font-semibold">Cancelar</button>
+                <button onclick="saveRace()" class="px-4 py-2 bg-gpred text-white rounded-lg text-xs font-bold">Salvar</button>
             </div>
         </div>
     </div>
@@ -303,45 +359,16 @@
 
     <script>
         let state = {
-            year: 1951,
-            mortalityRate: 5.0, // 5% chance por GP
+            year: 1955,
+            mortalityRate: 4.0,
             teams: [
-                { id: "t1", name: "Kesworth-Ridge", flag: "🇬🇧" },
-                { id: "t2", name: "Minimi", flag: "🇮🇹" },
-                { id: "t3", name: "Linz-Kindermann", flag: "🇩🇪" },
-                { id: "t4", name: "Unite (Gulf Oil)", flag: "🇺🇸" },
-                { id: "t5", name: "Policaeu-Valiante", flag: "🇫🇷" },
-                { id: "t6", name: "RBR-By", flag: "🇧🇪" },
-                { id: "t7", name: "Dillbane", flag: "🇺🇸" }
+
             ],
             drivers: [
-                { id: "d1", name: "Will Cape", flag: "🇬🇧", teamId: "t1", status: "ALIVE" },
-                { id: "d2", name: "Frank Trambley", flag: "🇬🇧", teamId: "t1", status: "ALIVE" },
-                { id: "d3", name: "Simone Domenicalli", flag: "🇮🇹", teamId: "t2", status: "ALIVE" },
-                { id: "d4", name: "Fabio Renate", flag: "🇮🇹", teamId: "t2", status: "ALIVE" },
-                { id: "d5", name: "Jan Uberdahl", flag: "🇩🇪", teamId: "t3", status: "ALIVE" },
-                { id: "d6", name: "Raimundo Foster", flag: "🇦🇷", teamId: "t3", status: "ALIVE" },
-                { id: "d7", name: "Kirk Shanahan", flag: "🇺🇸", teamId: "t4", status: "ALIVE" },
-                { id: "d8", name: "Marlon Cancionne", flag: "🇺🇸", teamId: "t4", status: "ALIVE" },
-                { id: "d9", name: "François Pinto", flag: "🇫🇷", teamId: "t5", status: "ALIVE" },
-                { id: "d10", name: "Tomas Rendeux", flag: "🇫🇷", teamId: "t5", status: "ALIVE" },
-                { id: "d11", name: "Xander Schoorde", flag: "🇿🇦", teamId: "t6", status: "ALIVE" },
-                { id: "d12", name: "Nathan De Rijk", flag: "🇿🇦", teamId: "t6", status: "ALIVE" },
-                { id: "d13", name: "Ralph Alster", flag: "🇺🇸", teamId: "t7", status: "ALIVE" },
-                { id: "d14", name: "Orson Smith", flag: "🇬🇧", teamId: "t7", status: "ALIVE" },
-                { id: "d15", name: "Hector Orquiza", flag: "🇦🇷", teamId: null, status: "ALIVE" },
-                { id: "d16", name: "Paulo Quirino", flag: "🇪🇸", teamId: null, status: "ALIVE" },
-                { id: "d17", name: "Harvey DeHervé", flag: "🇺🇸", teamId: null, status: "ALIVE" },
-                { id: "d18", name: "Henrik Johanssen", flag: "🇸🇪", teamId: null, status: "ALIVE" }
+
             ],
             races: [
-                { id: "r1", name: "GP do Reino Unido", track: "Silverstone", flag: "🇬🇧", completed: false, results: [], fatalities: [] },
-                { id: "r2", name: "GP da França", track: "Reims-Gueux", flag: "🇫🇷", completed: false, results: [], fatalities: [] },
-                { id: "r3", name: "GP da Bélgica", track: "Spa-Francorchamps", flag: "🇧🇪", completed: false, results: [], fatalities: [] },
-                { id: "r4", name: "GP dos EUA", track: "Indianapolis", flag: "🇺🇸", completed: false, results: [], fatalities: [] },
-                { id: "r5", name: "GP da Alemanha", track: "Nürburgring", flag: "🇩🇪", completed: false, results: [], fatalities: [] },
-                { id: "r6", name: "GP da Suíça", track: "Bremgarten", flag: "🇨🇭", completed: false, results: [], fatalities: [] },
-                { id: "r7", name: "GP da Itália", track: "Monza", flag: "🇮🇹", completed: false, results: [], fatalities: [] }
+
             ],
             selectedRaceId: "r1"
         };
@@ -396,7 +423,9 @@
         function renderStandings() {
             let driverStats = {};
             state.drivers.forEach(d => {
-                driverStats[d.id] = { driver: d, points: 0, wins: 0 };
+                if (d.teamId) {
+                    driverStats[d.id] = { driver: d, points: 0, wins: 0 };
+                }
             });
 
             let teamStats = {};
@@ -486,9 +515,13 @@
             let activeDrivers = state.drivers.filter(d => d.teamId && d.status === 'ALIVE');
 
             let racePerformances = activeDrivers.map(driver => {
+                const team = state.teams.find(t => t.id === driver.teamId);
+                const carStars = team ? (team.stars || 3) : 3;
+                const driverStars = driver.stars || 3;
+                const score = (driverStars * 10) + (carStars * 10) + (Math.random() * 40);
                 return {
                     driver: driver,
-                    score: Math.random() * 100
+                    score: score
                 };
             }).sort((a, b) => b.score - a.score);
 
@@ -539,7 +572,7 @@
                     r.fatalities = [];
                 });
                 state.drivers.forEach(d => d.status = 'ALIVE');
-                state.selectedRaceId = "r1";
+                state.selectedRaceId = state.races.length > 0 ? state.races[0].id : null;
                 saveToLocalStorage();
                 renderAll();
                 showToast("Temporada resetada com sucesso!");
@@ -548,10 +581,14 @@
 
         function renderRaceList() {
             const listEl = document.getElementById('race-list');
+            if (state.races.length === 0) {
+                listEl.innerHTML = '<p class="text-xs text-zinc-500 italic p-2">Nenhum GP cadastrado.</p>';
+                return;
+            }
             listEl.innerHTML = state.races.map(r => {
                 const isSelected = r.id === state.selectedRaceId;
                 return `
-                    <div onclick="selectRace('${r.id}')" class="p-3 rounded-lg border cursor-pointer transition-all flex items-center justify-between ${isSelected ? 'bg-gpred/20 border-gpred' : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700'}">
+                    <div onclick="selectRace('${r.id}')" class="p-3 rounded-lg border cursor-pointer transition-all flex items-center justify-between ${isSelected ? 'bg-gpred/25 border-gpred' : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700'}">
                         <div class="flex items-center space-x-2">
                             <span class="text-lg">${r.flag}</span>
                             <div>
@@ -577,12 +614,27 @@
 
         function renderRaceDetail() {
             const race = state.races.find(r => r.id === state.selectedRaceId);
-            if (!race) return;
+            const btnEdit = document.getElementById('btn-edit-race');
+            const btnDelete = document.getElementById('btn-delete-race');
+
+            if (!race) {
+                document.getElementById('race-detail-title').innerText = "Selecione uma corrida";
+                document.getElementById('race-detail-subtitle').innerText = "Nenhum GP selecionado";
+                document.getElementById('race-detail-status').className = "hidden";
+                btnEdit.classList.add('hidden');
+                btnDelete.classList.add('hidden');
+                document.getElementById('race-results-body').innerHTML = `<tr><td colspan="5" class="p-6 text-center text-zinc-500">Adicione ou selecione um GP.</td></tr>`;
+                return;
+            }
+
+            btnEdit.classList.remove('hidden');
+            btnDelete.classList.remove('hidden');
 
             document.getElementById('race-detail-title').innerText = `${race.flag} ${race.name}`;
             document.getElementById('race-detail-subtitle').innerText = `Circuito: ${race.track}`;
 
             const statusEl = document.getElementById('race-detail-status');
+            statusEl.classList.remove('hidden');
             if (race.completed) {
                 statusEl.className = "px-3 py-1 rounded-full text-xs font-semibold bg-emerald-950 text-emerald-400 border border-emerald-800";
                 statusEl.innerText = "GP Realizado";
@@ -637,16 +689,71 @@
             }).join('');
         }
 
+        function openRaceModal(raceId = null) {
+            document.getElementById('edit-race-id').value = raceId || '';
+            if (raceId) {
+                const r = state.races.find(x => x.id === raceId);
+                document.getElementById('modal-race-title').innerText = "Editar Grande Prêmio";
+                document.getElementById('race-name').value = r.name;
+                document.getElementById('race-track').value = r.track;
+                document.getElementById('race-flag').value = r.flag;
+            } else {
+                document.getElementById('modal-race-title').innerText = "Adicionar Grande Prêmio";
+                document.getElementById('race-name').value = '';
+                document.getElementById('race-track').value = '';
+                document.getElementById('race-flag').value = '🏁';
+            }
+            document.getElementById('modal-race').classList.remove('hidden');
+        }
+
+        function saveRace() {
+            const id = document.getElementById('edit-race-id').value;
+            const name = document.getElementById('race-name').value.trim();
+            const track = document.getElementById('race-track').value.trim();
+            const flag = document.getElementById('race-flag').value.trim() || '🏁';
+
+            if (!name || !track) return showToast("Preencha o nome e o circuito do GP!");
+
+            if (id) {
+                const r = state.races.find(x => x.id === id);
+                r.name = name;
+                r.track = track;
+                r.flag = flag;
+            } else {
+                const newId = 'r_' + Date.now();
+                state.races.push({ id: newId, name, track, flag, completed: false, results: [], fatalities: [] });
+                state.selectedRaceId = newId;
+            }
+            closeModals();
+            saveToLocalStorage();
+            renderAll();
+        }
+
+        function deleteRace(id) {
+            if (confirm("Deseja realmente excluir este GP?")) {
+                state.races = state.races.filter(r => r.id !== id);
+                state.selectedRaceId = state.races.length > 0 ? state.races[0].id : null;
+                saveToLocalStorage();
+                renderAll();
+                showToast("GP removido!");
+            }
+        }
+
         function renderTeams() {
             const grid = document.getElementById('teams-grid');
             grid.innerHTML = state.teams.map(team => {
                 const teamDrivers = state.drivers.filter(d => d.teamId === team.id);
+                const starsCount = team.stars || 3;
+                const starsStr = '⭐'.repeat(starsCount);
                 return `
                     <div class="bg-gpcard border border-zinc-800 rounded-xl p-4 shadow-lg space-y-3">
                         <div class="flex justify-between items-center border-b border-zinc-800 pb-2">
-                            <h3 class="font-bold text-white text-base flex items-center gap-1.5">
-                                <span class="text-lg">${team.flag}</span> ${team.name}
-                            </h3>
+                            <div>
+                                <h3 class="font-bold text-white text-base flex items-center gap-1.5">
+                                    <span class="text-lg">${team.flag}</span> ${team.name}
+                                </h3>
+                                <p class="text-[11px] text-amber-400">Carro: ${starsStr}</p>
+                            </div>
                             <div class="flex gap-1">
                                 <button onclick="openTeamModal('${team.id}')" class="text-zinc-400 hover:text-white p-1"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
                                 <button onclick="deleteTeam('${team.id}')" class="text-zinc-500 hover:text-gpred p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
@@ -656,14 +763,23 @@
                         <div class="space-y-1.5">
                             <span class="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Pilotos Titulares</span>
                             ${teamDrivers.length === 0 ? '<p class="text-xs text-zinc-600 italic">Nenhum piloto alocado</p>' : ''}
-                            ${teamDrivers.map(d => `
-                                <div class="flex justify-between items-center bg-zinc-900/60 p-2 rounded border border-zinc-800/80 text-xs">
-                                    <span class="${d.status === 'DEAD' ? 'line-through text-red-500' : 'text-zinc-200'} font-semibold">
-                                        ${d.flag} ${d.name} ${d.status === 'DEAD' ? '(FALECIDO)' : ''}
-                                    </span>
-                                    <button onclick="openDriverModal('${d.id}')" class="text-zinc-500 hover:text-white"><i data-lucide="edit-2" class="w-3 h-3"></i></button>
-                                </div>
-                            `).join('')}
+                            ${teamDrivers.map(d => {
+                                const dStars = '⭐'.repeat(d.stars || 3);
+                                return `
+                                    <div class="flex justify-between items-center bg-zinc-900/60 p-2 rounded border border-zinc-800/80 text-xs">
+                                        <div>
+                                            <span class="${d.status === 'DEAD' ? 'line-through text-red-500' : 'text-zinc-200'} font-semibold">
+                                                ${d.flag} ${d.name} ${d.status === 'DEAD' ? '(FALECIDO)' : ''}
+                                            </span>
+                                            <span class="block text-[10px] text-amber-400">Habilidade: ${dStars}</span>
+                                        </div>
+                                        <div class="flex gap-1">
+                                            <button onclick="openDriverModal('${d.id}')" class="text-zinc-400 hover:text-white p-1"><i data-lucide="edit-2" class="w-3 h-3"></i></button>
+                                            <button onclick="deleteDriver('${d.id}')" class="text-zinc-500 hover:text-red-500 p-1"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
                         </div>
                     </div>
                 `;
@@ -675,12 +791,21 @@
                     <div class="bg-zinc-900/40 border border-dashed border-zinc-800 rounded-xl p-4 space-y-3">
                         <h3 class="font-bold text-zinc-400 text-sm">Sem Equipe / Reservas</h3>
                         <div class="space-y-1.5">
-                            ${freeDrivers.map(d => `
-                                <div class="flex justify-between items-center bg-zinc-900 p-2 rounded text-xs">
-                                    <span class="text-zinc-300">${d.flag} ${d.name}</span>
-                                    <button onclick="openDriverModal('${d.id}')" class="text-zinc-500 hover:text-white"><i data-lucide="edit-2" class="w-3 h-3"></i></button>
-                                </div>
-                            `).join('')}
+                            ${freeDrivers.map(d => {
+                                const dStars = '⭐'.repeat(d.stars || 3);
+                                return `
+                                    <div class="flex justify-between items-center bg-zinc-900 p-2 rounded text-xs">
+                                        <div>
+                                            <span class="text-zinc-300 font-semibold">${d.flag} ${d.name}</span>
+                                            <span class="block text-[10px] text-amber-400">Habilidade: ${dStars}</span>
+                                        </div>
+                                        <div class="flex gap-1">
+                                            <button onclick="openDriverModal('${d.id}')" class="text-zinc-400 hover:text-white p-1"><i data-lucide="edit-2" class="w-3 h-3"></i></button>
+                                            <button onclick="deleteDriver('${d.id}')" class="text-zinc-500 hover:text-red-500 p-1"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
                         </div>
                     </div>
                 `;
@@ -696,10 +821,12 @@
                 document.getElementById('modal-team-title').innerText = "Editar Equipe";
                 document.getElementById('team-name').value = team.name;
                 document.getElementById('team-flag').value = team.flag;
+                document.getElementById('team-stars').value = team.stars || 3;
             } else {
                 document.getElementById('modal-team-title').innerText = "Nova Equipe";
                 document.getElementById('team-name').value = '';
                 document.getElementById('team-flag').value = '🇬🇧';
+                document.getElementById('team-stars').value = 3;
             }
             document.getElementById('modal-team').classList.remove('hidden');
         }
@@ -717,11 +844,13 @@
                 document.getElementById('driver-name').value = d.name;
                 document.getElementById('driver-flag').value = d.flag;
                 select.value = d.teamId || '';
+                document.getElementById('driver-stars').value = d.stars || 3;
             } else {
                 document.getElementById('modal-driver-title').innerText = "Novo Piloto";
                 document.getElementById('driver-name').value = '';
                 document.getElementById('driver-flag').value = '🇬🇧';
                 select.value = '';
+                document.getElementById('driver-stars').value = 3;
             }
             document.getElementById('modal-driver').classList.remove('hidden');
         }
@@ -729,12 +858,14 @@
         function closeModals() {
             document.getElementById('modal-team').classList.add('hidden');
             document.getElementById('modal-driver').classList.add('hidden');
+            document.getElementById('modal-race').classList.add('hidden');
         }
 
         function saveTeam() {
             const id = document.getElementById('edit-team-id').value;
             const name = document.getElementById('team-name').value.trim();
             const flag = document.getElementById('team-flag').value.trim() || '🏎️';
+            const stars = parseInt(document.getElementById('team-stars').value) || 3;
 
             if (!name) return showToast("Informe o nome da equipe!");
 
@@ -742,8 +873,9 @@
                 const team = state.teams.find(t => t.id === id);
                 team.name = name;
                 team.flag = flag;
+                team.stars = stars;
             } else {
-                state.teams.push({ id: 't_' + Date.now(), name, flag });
+                state.teams.push({ id: 't_' + Date.now(), name, flag, stars });
             }
             closeModals();
             saveToLocalStorage();
@@ -755,6 +887,7 @@
             const name = document.getElementById('driver-name').value.trim();
             const flag = document.getElementById('driver-flag').value.trim() || '🏎️';
             const teamId = document.getElementById('driver-team-select').value || null;
+            const stars = parseInt(document.getElementById('driver-stars').value) || 3;
 
             if (!name) return showToast("Informe o nome do piloto!");
 
@@ -763,8 +896,9 @@
                 d.name = name;
                 d.flag = flag;
                 d.teamId = teamId;
+                d.stars = stars;
             } else {
-                state.drivers.push({ id: 'd_' + Date.now(), name, flag, teamId, status: 'ALIVE' });
+                state.drivers.push({ id: 'd_' + Date.now(), name, flag, teamId, stars, status: 'ALIVE' });
             }
             closeModals();
             saveToLocalStorage();
@@ -777,7 +911,29 @@
                 state.drivers.forEach(d => { if (d.teamId === id) d.teamId = null; });
                 saveToLocalStorage();
                 renderAll();
+                showToast("Equipe removida!");
             }
+        }
+
+        function deleteDriver(id) {
+            if (confirm("Deseja realmente remover este piloto?")) {
+                state.drivers = state.drivers.filter(d => d.id !== id);
+                saveToLocalStorage();
+                renderAll();
+                showToast("Piloto removido!");
+            }
+        }
+
+        function randomizeAllStars() {
+            state.teams.forEach(t => {
+                t.stars = Math.floor(Math.random() * 5) + 1;
+            });
+            state.drivers.forEach(d => {
+                d.stars = Math.floor(Math.random() * 5) + 1;
+            });
+            saveToLocalStorage();
+            renderAll();
+            showToast("Estrelas de equipes e pilotos aleatorizadas com sucesso!");
         }
 
         function initSettingsUI() {
