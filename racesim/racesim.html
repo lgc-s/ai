@@ -11,10 +11,11 @@
             theme: {
                 extend: {
                     colors: {
-                        gpred: '#e10600',
-                        gpdark: '#15151e',
-                        gpcard: '#1f1f27',
-                        gpgold: '#d4af37'
+                        gporange: '#ff6600',
+                        gporangehover: '#e65c00',
+                        gpdark: '#121212',
+                        gpcard: '#1e1e1e',
+                        gpgold: '#ffb703'
                     }
                 }
             }
@@ -25,98 +26,98 @@
         @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,400;0,700;1,400&display=swap');
         body {
             font-family: 'Titillium Web', sans-serif;
-            background-color: #15151e;
+            background-color: #121212;
             color: #e4e4e7;
         }
         .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: #1f1f27;
+            background: #1e1e1e;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #e10600;
+            background: #ff6600;
             border-radius: 3px;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col text-xs sm:text-sm">
 
     <header class="bg-gpcard border-b border-zinc-800 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
-            <div class="flex items-center space-x-3">
-                <div class="bg-gpred text-white p-2 rounded-lg font-black text-xl italic tracking-wider">gp</div>
+        <div class="max-w-7xl mx-auto px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center space-x-2">
+                <div class="bg-gporange text-black p-1.5 rounded-lg font-black text-lg italic tracking-wider">GP</div>
                 <div>
-                    <h1 class="text-xl font-bold tracking-wide text-white uppercase">Simulador Clássico de gp</h1>
-                    <p class="text-xs text-zinc-400">Temporada <span id="header-year" class="text-gpgold font-bold">1951</span></p>
+                    <h1 class="text-base font-bold tracking-wide text-white uppercase leading-none">Simulador de GP</h1>
+                    <p class="text-[11px] text-zinc-400">Temporada <span id="header-year" class="text-gporange font-bold">1951</span></p>
                 </div>
             </div>
 
-            <nav class="flex space-x-1 bg-zinc-900/80 p-1 rounded-xl border border-zinc-800">
-                <button onclick="switchTab('standings')" id="tab-standings" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-gpred text-white">
-                    <i data-lucide="trophy" class="inline-block w-4 h-4 mr-1"></i> Classificação
+            <nav class="flex space-x-1 bg-zinc-900 p-1 rounded-lg border border-zinc-800">
+                <button onclick="switchTab('standings')" id="tab-standings" class="tab-btn px-3 py-1.5 rounded-md text-xs font-semibold transition-all bg-gporange text-black">
+                    <i data-lucide="trophy" class="inline-block w-3.5 h-3.5 mr-1"></i> Classificação
                 </button>
-                <button onclick="switchTab('races')" id="tab-races" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all text-zinc-400 hover:text-white">
-                    <i data-lucide="flag" class="inline-block w-4 h-4 mr-1"></i> Corridas & GPs
+                <button onclick="switchTab('races')" id="tab-races" class="tab-btn px-3 py-1.5 rounded-md text-xs font-semibold transition-all text-zinc-400 hover:text-white">
+                    <i data-lucide="flag" class="inline-block w-3.5 h-3.5 mr-1"></i> Corridas
                 </button>
-                <button onclick="switchTab('teams')" id="tab-teams" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all text-zinc-400 hover:text-white">
-                    <i data-lucide="users" class="inline-block w-4 h-4 mr-1"></i> Equipes & Pilotos
+                <button onclick="switchTab('teams')" id="tab-teams" class="tab-btn px-3 py-1.5 rounded-md text-xs font-semibold transition-all text-zinc-400 hover:text-white">
+                    <i data-lucide="users" class="inline-block w-3.5 h-3.5 mr-1"></i> Equipes & Pilotos
                 </button>
-                <button onclick="switchTab('settings')" id="tab-settings" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all text-zinc-400 hover:text-white">
-                    <i data-lucide="settings" class="inline-block w-4 h-4 mr-1"></i> Configurações
+                <button onclick="switchTab('settings')" id="tab-settings" class="tab-btn px-3 py-1.5 rounded-md text-xs font-semibold transition-all text-zinc-400 hover:text-white">
+                    <i data-lucide="settings" class="inline-block w-3.5 h-3.5 mr-1"></i> Configurações
                 </button>
             </nav>
         </div>
     </header>
 
-    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6">
+    <main class="flex-grow max-w-7xl w-full mx-auto p-3 sm:p-4 space-y-4">
 
-        <div class="mb-6 bg-gradient-to-r from-zinc-900 via-gpcard to-zinc-900 p-4 rounded-xl border border-zinc-800 flex flex-wrap items-center justify-between gap-4 shadow-lg">
+        <div class="bg-gradient-to-r from-zinc-900 via-gpcard to-zinc-900 p-3 rounded-xl border border-zinc-800 flex flex-wrap items-center justify-between gap-3 shadow-md">
             <div class="flex items-center space-x-4">
                 <div class="text-center border-r border-zinc-700 pr-4">
-                    <span class="block text-xs uppercase text-zinc-400">Progresso</span>
-                    <span id="season-progress" class="text-lg font-bold text-gpgold">0 / 7 GPs</span>
+                    <span class="block text-[10px] uppercase text-zinc-400">Progresso</span>
+                    <span id="season-progress" class="text-base font-bold text-gporange">0 / 7 GPs</span>
                 </div>
                 <div>
-                    <span class="block text-xs uppercase text-zinc-400">Próxima Etapa</span>
-                    <span id="next-gp-name" class="text-base font-semibold text-white">GP 1 - Reino Unido</span>
+                    <span class="block text-[10px] uppercase text-zinc-400">Próxima Etapa</span>
+                    <span id="next-gp-name" class="text-sm font-semibold text-white">GP 1 - Reino Unido</span>
                 </div>
             </div>
-            <div class="flex items-center gap-3">
-                <button onclick="simulateNextRace()" id="btn-sim-next" class="bg-gpred hover:bg-red-700 text-white font-bold py-2.5 px-5 rounded-lg flex items-center space-x-2 transition-all shadow-md active:scale-95">
-                    <i data-lucide="play" class="w-4 h-4"></i>
+            <div class="flex items-center gap-2">
+                <button onclick="simulateNextRace()" id="btn-sim-next" class="bg-gporange hover:bg-gporangehover text-black font-bold py-1.5 px-3 rounded-lg flex items-center space-x-1.5 text-xs transition-all shadow-md active:scale-95">
+                    <i data-lucide="play" class="w-3.5 h-3.5"></i>
                     <span>Simular Próximo GP</span>
                 </button>
-                <button onclick="simulateSeason()" id="btn-sim-all" class="bg-zinc-800 hover:bg-zinc-700 text-amber-400 font-bold py-2.5 px-4 rounded-lg flex items-center space-x-2 transition-all border border-amber-500/30">
-                    <i data-lucide="fast-forward" class="w-4 h-4"></i>
-                    <span>Simular Toda a Temporada</span>
+                <button onclick="simulateSeason()" id="btn-sim-all" class="bg-zinc-800 hover:bg-zinc-700 text-gporange font-bold py-1.5 px-3 rounded-lg flex items-center space-x-1.5 text-xs transition-all border border-gporange/30">
+                    <i data-lucide="fast-forward" class="w-3.5 h-3.5"></i>
+                    <span>Simular Temporada</span>
                 </button>
-                <button onclick="resetSeason()" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white p-2.5 rounded-lg border border-zinc-800" title="Resetar Resultados">
+                <button onclick="resetSeason()" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white p-1.5 rounded-lg border border-zinc-800" title="Resetar Resultados">
                     <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                 </button>
             </div>
         </div>
 
-        <section id="view-standings" class="tab-content space-y-6">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <section id="view-standings" class="tab-content space-y-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-                <div class="bg-gpcard rounded-xl border border-zinc-800 p-5 shadow-xl">
-                    <div class="flex items-center justify-between mb-4 border-b border-zinc-800 pb-3">
-                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                            <i data-lucide="user" class="text-gpred"></i> Campeonato de Pilotos
+                <div class="bg-gpcard rounded-xl border border-zinc-800 p-3.5 shadow-lg">
+                    <div class="flex items-center justify-between mb-2.5 border-b border-zinc-800 pb-2">
+                        <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
+                            <i data-lucide="user" class="text-gporange w-4 h-4"></i> Campeonato de Pilotos
                         </h2>
-                        <span class="text-xs text-zinc-400 uppercase tracking-widest">Top 5 pontua</span>
+                        <span class="text-[10px] text-zinc-400 uppercase tracking-wider">Top 5 pontua</span>
                     </div>
                     <div class="overflow-x-auto custom-scrollbar">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-zinc-900/60 text-zinc-400 uppercase text-xs">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-zinc-900/80 text-zinc-400 uppercase text-[10px]">
                                 <tr>
-                                    <th class="p-2.5">Pos</th>
-                                    <th class="p-2.5">Piloto</th>
-                                    <th class="p-2.5">Equipe</th>
-                                    <th class="p-2.5 text-center">Pts</th>
-                                    <th class="p-2.5 text-center">Vit</th>
+                                    <th class="p-1.5">Pos</th>
+                                    <th class="p-1.5">Piloto</th>
+                                    <th class="p-1.5">Equipe</th>
+                                    <th class="p-1.5 text-center">Pts</th>
+                                    <th class="p-1.5 text-center">Vit</th>
                                 </tr>
                             </thead>
                             <tbody id="driver-standings-body" class="divide-y divide-zinc-800/50">
@@ -125,21 +126,21 @@
                     </div>
                 </div>
 
-                <div class="bg-gpcard rounded-xl border border-zinc-800 p-5 shadow-xl">
-                    <div class="flex items-center justify-between mb-4 border-b border-zinc-800 pb-3">
-                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                            <i data-lucide="shield" class="text-gpgold"></i> Campeonato de Construtores
+                <div class="bg-gpcard rounded-xl border border-zinc-800 p-3.5 shadow-lg">
+                    <div class="flex items-center justify-between mb-2.5 border-b border-zinc-800 pb-2">
+                        <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
+                            <i data-lucide="shield" class="text-gporange w-4 h-4"></i> Campeonato de Construtores
                         </h2>
-                        <span class="text-xs text-zinc-400 uppercase tracking-widest">Soma da equipe</span>
+                        <span class="text-[10px] text-zinc-400 uppercase tracking-wider">Soma da equipe</span>
                     </div>
                     <div class="overflow-x-auto custom-scrollbar">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-zinc-900/60 text-zinc-400 uppercase text-xs">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-zinc-900/80 text-zinc-400 uppercase text-[10px]">
                                 <tr>
-                                    <th class="p-2.5">Pos</th>
-                                    <th class="p-2.5">Equipe</th>
-                                    <th class="p-2.5 text-center">Pts</th>
-                                    <th class="p-2.5 text-center">Vit</th>
+                                    <th class="p-1.5">Pos</th>
+                                    <th class="p-1.5">Equipe</th>
+                                    <th class="p-1.5 text-center">Pts</th>
+                                    <th class="p-1.5 text-center">Vit</th>
                                 </tr>
                             </thead>
                             <tbody id="team-standings-body" class="divide-y divide-zinc-800/50">
@@ -151,51 +152,51 @@
             </div>
         </section>
 
-        <section id="view-races" class="tab-content hidden space-y-6">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="bg-gpcard rounded-xl border border-zinc-800 p-4 h-fit space-y-4">
+        <section id="view-races" class="tab-content hidden space-y-4">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div class="bg-gpcard rounded-xl border border-zinc-800 p-3 h-fit space-y-3">
                     <div class="flex justify-between items-center">
-                        <h2 class="text-base font-bold text-white flex items-center gap-2">
-                            <i data-lucide="calendar" class="text-gpred"></i> Calendário
+                        <h2 class="text-xs font-bold text-white flex items-center gap-1.5 uppercase">
+                            <i data-lucide="calendar" class="text-gporange w-4 h-4"></i> Calendário
                         </h2>
-                        <button onclick="openRaceModal()" class="bg-gpred hover:bg-red-700 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1">
-                            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Novo GP
+                        <button onclick="openRaceModal()" class="bg-gporange hover:bg-gporangehover text-black text-[11px] font-bold px-2 py-1 rounded flex items-center gap-1">
+                            <i data-lucide="plus" class="w-3 h-3"></i> Novo GP
                         </button>
                     </div>
-                    <div id="race-list" class="space-y-2">
+                    <div id="race-list" class="space-y-1.5">
                     </div>
                 </div>
 
-                <div class="lg:col-span-2 bg-gpcard rounded-xl border border-zinc-800 p-5 shadow-xl">
-                    <div id="race-detail-header" class="border-b border-zinc-800 pb-4 mb-4 flex flex-wrap justify-between items-center gap-2">
+                <div class="lg:col-span-2 bg-gpcard rounded-xl border border-zinc-800 p-4 shadow-lg">
+                    <div id="race-detail-header" class="border-b border-zinc-800 pb-3 mb-3 flex flex-wrap justify-between items-center gap-2">
                         <div>
-                            <h2 id="race-detail-title" class="text-xl font-bold text-white">Selecione uma corrida</h2>
+                            <h2 id="race-detail-title" class="text-base font-bold text-white">Selecione uma corrida</h2>
                             <p id="race-detail-subtitle" class="text-xs text-zinc-400">Resultados completos e incidentes</p>
                         </div>
                         <div class="flex items-center gap-2">
-                            <button id="btn-edit-race" onclick="openRaceModal(state.selectedRaceId)" class="hidden text-xs bg-zinc-800 hover:bg-zinc-700 text-white px-3 py-1 rounded-lg border border-zinc-700">Editar</button>
-                            <button id="btn-delete-race" onclick="deleteRace(state.selectedRaceId)" class="hidden text-xs bg-red-950 hover:bg-red-900 text-red-300 px-3 py-1 rounded-lg border border-red-800">Excluir</button>
-                            <span id="race-detail-status" class="px-3 py-1 rounded-full text-xs font-semibold bg-zinc-800 text-zinc-400">Não Realizada</span>
+                            <button id="btn-edit-race" onclick="openRaceModal(state.selectedRaceId)" class="hidden text-xs bg-zinc-800 hover:bg-zinc-700 text-white px-2.5 py-1 rounded border border-zinc-700">Editar</button>
+                            <button id="btn-delete-race" onclick="deleteRace(state.selectedRaceId)" class="hidden text-xs bg-red-950 hover:bg-red-900 text-red-300 px-2.5 py-1 rounded border border-red-800">Excluir</button>
+                            <span id="race-detail-status" class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-zinc-800 text-zinc-400">Não Realizada</span>
                         </div>
                     </div>
 
-                    <div id="race-incidents-box" class="hidden mb-4 p-3 bg-red-950/40 border border-red-800/60 rounded-lg text-sm text-red-200">
+                    <div id="race-incidents-box" class="hidden mb-3 p-2.5 bg-orange-950/30 border border-orange-800/50 rounded-lg text-xs text-orange-200">
                     </div>
 
                     <div class="overflow-x-auto custom-scrollbar">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-zinc-900/80 text-zinc-400 uppercase text-xs">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-zinc-900/80 text-zinc-400 uppercase text-[10px]">
                                 <tr>
-                                    <th class="p-2">Pos</th>
-                                    <th class="p-2">Piloto</th>
-                                    <th class="p-2">Equipe</th>
-                                    <th class="p-2 text-center">Status</th>
-                                    <th class="p-2 text-center">Pontos</th>
+                                    <th class="p-1.5">Pos</th>
+                                    <th class="p-1.5">Piloto</th>
+                                    <th class="p-1.5">Equipe</th>
+                                    <th class="p-1.5 text-center">Status</th>
+                                    <th class="p-1.5 text-center">Pontos</th>
                                 </tr>
                             </thead>
                             <tbody id="race-results-body" class="divide-y divide-zinc-800/40 text-zinc-300">
                                 <tr>
-                                    <td colspan="5" class="p-6 text-center text-zinc-500">Selecione ou simule um GP para visualizar os resultados completos.</td>
+                                    <td colspan="5" class="p-4 text-center text-zinc-500">Selecione ou simule um GP para visualizar os resultados completos.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -204,60 +205,68 @@
             </div>
         </section>
 
-        <section id="view-teams" class="tab-content hidden space-y-6">
-            <div class="flex flex-wrap justify-between items-center gap-4 bg-gpcard p-4 rounded-xl border border-zinc-800">
-                <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i data-lucide="user-plus" class="text-gpred"></i> Gestão de Grid e Equipes
+        <section id="view-teams" class="tab-content hidden space-y-4">
+            <div class="flex flex-wrap justify-between items-center gap-3 bg-gpcard p-3 rounded-xl border border-zinc-800">
+                <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                    <i data-lucide="user-plus" class="text-gporange w-4 h-4"></i> Gestão de Grid e Equipes
                 </h2>
                 <div class="flex gap-2">
-                    <button onclick="openTeamModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-semibold px-3 py-2 rounded-lg border border-zinc-700 flex items-center gap-1">
+                    <button onclick="openTeamModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-semibold px-2.5 py-1.5 rounded border border-zinc-700 flex items-center gap-1">
                         <i data-lucide="plus" class="w-3.5 h-3.5"></i> Nova Equipe
                     </button>
-                    <button onclick="openDriverModal()" class="bg-gpred hover:bg-red-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1">
+                    <button onclick="openDriverModal()" class="bg-gporange hover:bg-gporangehover text-black text-xs font-bold px-2.5 py-1.5 rounded flex items-center gap-1">
                         <i data-lucide="plus" class="w-3.5 h-3.5"></i> Novo Piloto
                     </button>
                 </div>
             </div>
 
-            <div id="teams-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div id="teams-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             </div>
         </section>
 
-        <section id="view-settings" class="tab-content hidden space-y-6">
-            <div class="max-w-2xl mx-auto bg-gpcard rounded-xl border border-zinc-800 p-6 shadow-xl space-y-6">
-                <h2 class="text-lg font-bold text-white border-b border-zinc-800 pb-3 flex items-center gap-2">
-                    <i data-lucide="sliders" class="text-gpred"></i> Regras e Parâmetros da Temporada
+        <section id="view-settings" class="tab-content hidden space-y-4">
+            <div class="max-w-xl mx-auto bg-gpcard rounded-xl border border-zinc-800 p-4 shadow-lg space-y-4 text-xs">
+                <h2 class="text-sm font-bold text-white border-b border-zinc-800 pb-2 flex items-center gap-2">
+                    <i data-lucide="sliders" class="text-gporange w-4 h-4"></i> Regras e Parâmetros da Temporada
                 </h2>
 
-                <div class="space-y-4">
+                <div class="space-y-3">
                     <div>
-                        <label class="block text-sm font-semibold text-zinc-300 mb-1">Ano da Temporada</label>
-                        <input type="number" id="setting-year" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-gpred">
+                        <label class="block font-semibold text-zinc-300 mb-1">Ano da Temporada</label>
+                        <input type="number" id="setting-year" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-zinc-300 mb-1">Taxa de Fatalidade por GP por Piloto (%)</label>
+                        <label class="block font-semibold text-zinc-300 mb-1">Taxa de Abandono (DNF / Breakdowns) por Piloto (%)</label>
                         <div class="flex items-center gap-3">
-                            <input type="range" id="setting-mortality" min="0" max="20" step="0.5" class="w-full accent-gpred">
-                            <span id="setting-mortality-val" class="text-gpgold font-bold text-lg min-w-[50px]">5%</span>
+                            <input type="range" id="setting-dnf" min="0" max="50" step="1" class="w-full accent-gporange">
+                            <span id="setting-dnf-val" class="text-gporange font-bold text-base min-w-[45px]">15%</span>
                         </div>
                     </div>
 
-                    <div class="pt-4 border-t border-zinc-800 flex flex-col gap-3">
-                        <button onclick="randomizeAllStars()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2.5 px-4 rounded-lg text-sm flex items-center justify-center gap-2">
+                    <div>
+                        <label class="block font-semibold text-zinc-300 mb-1">Taxa de Fatalidade por GP por Piloto (%)</label>
+                        <div class="flex items-center gap-3">
+                            <input type="range" id="setting-mortality" min="0" max="20" step="0.5" class="w-full accent-gporange">
+                            <span id="setting-mortality-val" class="text-gporange font-bold text-base min-w-[45px]">4%</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-zinc-800">
+                        <button onclick="randomizeAllStars()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-gporange border border-gporange/40 font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1.5">
                             <i data-lucide="star" class="w-4 h-4"></i> Aleatorizar Estrelas de Equipes e Pilotos (1 a 5)
                         </button>
                     </div>
 
-                    <div class="pt-4 border-t border-zinc-800 flex flex-wrap gap-3">
-                        <button onclick="saveSettings()" class="bg-gpred hover:bg-red-700 text-white font-bold py-2 px-5 rounded-lg text-sm">
+                    <div class="pt-3 border-t border-zinc-800 flex flex-wrap gap-2">
+                        <button onclick="saveSettings()" class="bg-gporange hover:bg-gporangehover text-black font-bold py-1.5 px-4 rounded-lg">
                             Salvar Alterações
                         </button>
-                        <button onclick="exportData()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-semibold py-2 px-4 rounded-lg text-sm border border-zinc-700 flex items-center gap-1">
-                            <i data-lucide="download" class="w-4 h-4"></i> Exportar Dados (JSON)
+                        <button onclick="exportData()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-semibold py-1.5 px-3 rounded-lg border border-zinc-700 flex items-center gap-1">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Exportar (JSON)
                         </button>
-                        <label class="bg-zinc-800 hover:bg-zinc-700 text-white font-semibold py-2 px-4 rounded-lg text-sm border border-zinc-700 cursor-pointer flex items-center gap-1">
-                            <i data-lucide="upload" class="w-4 h-4"></i> Importar JSON
+                        <label class="bg-zinc-800 hover:bg-zinc-700 text-white font-semibold py-1.5 px-3 rounded-lg border border-zinc-700 cursor-pointer flex items-center gap-1">
+                            <i data-lucide="upload" class="w-3.5 h-3.5"></i> Importar JSON
                             <input type="file" id="import-file" onchange="importData(event)" class="hidden" accept=".json">
                         </label>
                     </div>
@@ -266,21 +275,21 @@
         </section>
     </main>
 
-    <div id="modal-team" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-gpcard border border-zinc-700 rounded-xl p-6 w-full max-w-md space-y-4">
-            <h3 id="modal-team-title" class="text-lg font-bold text-white">Adicionar Equipe</h3>
+    <div id="modal-team" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-gpcard border border-zinc-700 rounded-xl p-4 w-full max-w-md space-y-3 text-xs">
+            <h3 id="modal-team-title" class="text-sm font-bold text-white">Adicionar Equipe</h3>
             <input type="hidden" id="edit-team-id">
             <div>
-                <label class="block text-xs text-zinc-400 mb-1">Nome da Equipe</label>
-                <input type="text" id="team-name" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white">
+                <label class="block text-zinc-400 mb-1">Nome da Equipe</label>
+                <input type="text" id="team-name" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
             </div>
             <div>
-                <label class="block text-xs text-zinc-400 mb-1">Bandeira / País (Emoji)</label>
-                <input type="text" id="team-flag" placeholder="🇬🇧" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white">
+                <label class="block text-zinc-400 mb-1">Bandeira / País (Emoji)</label>
+                <input type="text" id="team-flag" placeholder="🇬🇧" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
             </div>
             <div>
-                <label class="block text-xs text-zinc-400 mb-1">Qualidade do Carro (Estrelas: 1 a 5)</label>
-                <select id="team-stars" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white">
+                <label class="block text-zinc-400 mb-1">Qualidade do Carro (Estrelas: 1 a 5)</label>
+                <select id="team-stars" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
                     <option value="1">⭐ 1 Estrela</option>
                     <option value="2">⭐⭐ 2 Estrelas</option>
                     <option value="3" selected>⭐⭐⭐ 3 Estrelas</option>
@@ -289,32 +298,32 @@
                 </select>
             </div>
             <div class="flex justify-end gap-2 pt-2">
-                <button onclick="closeModals()" class="px-4 py-2 bg-zinc-800 text-zinc-300 rounded-lg text-xs font-semibold">Cancelar</button>
-                <button onclick="saveTeam()" class="px-4 py-2 bg-gpred text-white rounded-lg text-xs font-bold">Salvar</button>
+                <button onclick="closeModals()" class="px-3 py-1.5 bg-zinc-800 text-zinc-300 rounded-lg font-semibold">Cancelar</button>
+                <button onclick="saveTeam()" class="px-3 py-1.5 bg-gporange text-black rounded-lg font-bold">Salvar</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-driver" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-gpcard border border-zinc-700 rounded-xl p-6 w-full max-w-md space-y-4">
-            <h3 id="modal-driver-title" class="text-lg font-bold text-white">Adicionar Piloto</h3>
+    <div id="modal-driver" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-gpcard border border-zinc-700 rounded-xl p-4 w-full max-w-md space-y-3 text-xs">
+            <h3 id="modal-driver-title" class="text-sm font-bold text-white">Adicionar Piloto</h3>
             <input type="hidden" id="edit-driver-id">
             <div>
-                <label class="block text-xs text-zinc-400 mb-1">Nome Completo</label>
-                <input type="text" id="driver-name" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white">
+                <label class="block text-zinc-400 mb-1">Nome Completo</label>
+                <input type="text" id="driver-name" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
             </div>
             <div>
-                <label class="block text-xs text-zinc-400 mb-1">Bandeira (Emoji)</label>
-                <input type="text" id="driver-flag" placeholder="🇬🇧" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white">
+                <label class="block text-zinc-400 mb-1">Bandeira (Emoji)</label>
+                <input type="text" id="driver-flag" placeholder="🇬🇧" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
             </div>
             <div>
-                <label class="block text-xs text-zinc-400 mb-1">Equipe</label>
-                <select id="driver-team-select" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white">
+                <label class="block text-zinc-400 mb-1">Equipe</label>
+                <select id="driver-team-select" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
                 </select>
             </div>
             <div>
-                <label class="block text-xs text-zinc-400 mb-1">Habilidade do Piloto (Estrelas: 1 a 5)</label>
-                <select id="driver-stars" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white">
+                <label class="block text-zinc-400 mb-1">Habilidade do Piloto (Estrelas: 1 a 5)</label>
+                <select id="driver-stars" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
                     <option value="1">⭐ 1 Estrela</option>
                     <option value="2">⭐⭐ 2 Estrelas</option>
                     <option value="3" selected>⭐⭐⭐ 3 Estrelas</option>
@@ -323,37 +332,37 @@
                 </select>
             </div>
             <div class="flex justify-end gap-2 pt-2">
-                <button onclick="closeModals()" class="px-4 py-2 bg-zinc-800 text-zinc-300 rounded-lg text-xs font-semibold">Cancelar</button>
-                <button onclick="saveDriver()" class="px-4 py-2 bg-gpred text-white rounded-lg text-xs font-bold">Salvar</button>
+                <button onclick="closeModals()" class="px-3 py-1.5 bg-zinc-800 text-zinc-300 rounded-lg font-semibold">Cancelar</button>
+                <button onclick="saveDriver()" class="px-3 py-1.5 bg-gporange text-black rounded-lg font-bold">Salvar</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-race" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-gpcard border border-zinc-700 rounded-xl p-6 w-full max-w-md space-y-4">
-            <h3 id="modal-race-title" class="text-lg font-bold text-white">Adicionar Grande Prêmio</h3>
+    <div id="modal-race" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-gpcard border border-zinc-700 rounded-xl p-4 w-full max-w-md space-y-3 text-xs">
+            <h3 id="modal-race-title" class="text-sm font-bold text-white">Adicionar Grande Prêmio</h3>
             <input type="hidden" id="edit-race-id">
             <div>
-                <label class="block text-xs text-zinc-400 mb-1">Nome do GP</label>
-                <input type="text" id="race-name" placeholder="GP do Brasil" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white">
+                <label class="block text-zinc-400 mb-1">Nome do GP</label>
+                <input type="text" id="race-name" placeholder="GP do Brasil" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
             </div>
             <div>
-                <label class="block text-xs text-zinc-400 mb-1">Circuito / Pista</label>
-                <input type="text" id="race-track" placeholder="Corrida do Rio" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white">
+                <label class="block text-zinc-400 mb-1">Circuito / Pista</label>
+                <input type="text" id="race-track" placeholder="Interlagos" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
             </div>
             <div>
-                <label class="block text-xs text-zinc-400 mb-1">Bandeira / País (Emoji)</label>
-                <input type="text" id="race-flag" placeholder="🇧🇷" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white">
+                <label class="block text-zinc-400 mb-1">Bandeira / País (Emoji)</label>
+                <input type="text" id="race-flag" placeholder="🇧🇷" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
             </div>
             <div class="flex justify-end gap-2 pt-2">
-                <button onclick="closeModals()" class="px-4 py-2 bg-zinc-800 text-zinc-300 rounded-lg text-xs font-semibold">Cancelar</button>
-                <button onclick="saveRace()" class="px-4 py-2 bg-gpred text-white rounded-lg text-xs font-bold">Salvar</button>
+                <button onclick="closeModals()" class="px-3 py-1.5 bg-zinc-800 text-zinc-300 rounded-lg font-semibold">Cancelar</button>
+                <button onclick="saveRace()" class="px-3 py-1.5 bg-gporange text-black rounded-lg font-bold">Salvar</button>
             </div>
         </div>
     </div>
 
-    <div id="toast" class="fixed bottom-4 right-4 bg-zinc-900 border border-gpred text-white px-4 py-3 rounded-lg shadow-2xl opacity-0 pointer-events-none transition-opacity duration-300 flex items-center space-x-2 z-50">
-        <i data-lucide="info" class="text-gpred w-5 h-5"></i>
+    <div id="toast" class="fixed bottom-4 right-4 bg-zinc-900 border border-gporange text-white px-3 py-2 rounded-lg shadow-2xl opacity-0 pointer-events-none transition-opacity duration-300 flex items-center space-x-2 z-50 text-xs">
+        <i data-lucide="info" class="text-gporange w-4 h-4"></i>
         <span id="toast-message">Mensagem</span>
     </div>
 
@@ -361,19 +370,15 @@
         let state = {
             year: 1955,
             mortalityRate: 4.0,
-            teams: [
-
-            ],
-            drivers: [
-
-            ],
-            races: [
-
-            ],
+            dnfRate: 15.0,
+            teams: [],
+            drivers: [],
+            races: [],
             selectedRaceId: "r1"
         };
 
         const POINTS_MAP = [8, 6, 4, 3, 2];
+        const DNF_REASONS = ["Falha no Motor", "Problema Elétrico", "Suspensão Quebrada", "Vazamento de Óleo", "Freios", "Caixa de Câmbio", "Rodou sozinho"];
 
         window.addEventListener('DOMContentLoaded', () => {
             loadFromLocalStorage();
@@ -394,13 +399,13 @@
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('bg-gpred', 'text-white');
+                btn.classList.remove('bg-gporange', 'text-black');
                 btn.classList.add('text-zinc-400');
             });
 
             document.getElementById(`view-${tabId}`).classList.remove('hidden');
             const activeBtn = document.getElementById(`tab-${tabId}`);
-            activeBtn.classList.add('bg-gpred', 'text-white');
+            activeBtn.classList.add('bg-gporange', 'text-black');
             activeBtn.classList.remove('text-zinc-400');
         }
 
@@ -457,15 +462,15 @@
                 const team = state.teams.find(t => t.id === d.teamId);
                 const isDead = d.status === 'DEAD';
                 return `
-                    <tr class="${isDead ? 'opacity-50 bg-red-950/20' : ''} hover:bg-zinc-800/40">
-                        <td class="p-2.5 font-bold ${idx < 3 ? 'text-gpgold' : 'text-zinc-400'}">${idx + 1}º</td>
-                        <td class="p-2.5 font-semibold text-white">
+                    <tr class="${isDead ? 'opacity-50 bg-red-950/20' : 'hover:bg-zinc-800/40'}">
+                        <td class="p-1.5 font-bold ${idx < 3 ? 'text-gporange' : 'text-zinc-400'}">${idx + 1}º</td>
+                        <td class="p-1.5 font-semibold text-white">
                             <span class="mr-1">${d.flag}</span> ${d.name}
-                            ${isDead ? '<span class="ml-1 text-[10px] bg-red-800 text-white px-1.5 py-0.5 rounded uppercase font-bold">Falecido</span>' : ''}
+                            ${isDead ? '<span class="ml-1 text-[9px] bg-red-800 text-white px-1 py-0.2 rounded uppercase font-bold">Falecido</span>' : ''}
                         </td>
-                        <td class="p-2.5 text-zinc-400">${team ? `${team.flag} ${team.name}` : 'Sem Equipe'}</td>
-                        <td class="p-2.5 font-bold text-center text-gpgold">${item.points}</td>
-                        <td class="p-2.5 text-center text-zinc-400">${item.wins}</td>
+                        <td class="p-1.5 text-zinc-400">${team ? `${team.flag} ${team.name}` : 'Sem Equipe'}</td>
+                        <td class="p-1.5 font-bold text-center text-gporange">${item.points}</td>
+                        <td class="p-1.5 text-center text-zinc-400">${item.wins}</td>
                     </tr>
                 `;
             }).join('');
@@ -477,10 +482,10 @@
                 const t = item.team;
                 return `
                     <tr class="hover:bg-zinc-800/40">
-                        <td class="p-2.5 font-bold ${idx < 3 ? 'text-gpgold' : 'text-zinc-400'}">${idx + 1}º</td>
-                        <td class="p-2.5 font-semibold text-white"><span class="mr-1">${t.flag}</span> ${t.name}</td>
-                        <td class="p-2.5 font-bold text-center text-gpgold">${item.points}</td>
-                        <td class="p-2.5 text-center text-zinc-400">${item.wins}</td>
+                        <td class="p-1.5 font-bold ${idx < 3 ? 'text-gporange' : 'text-zinc-400'}">${idx + 1}º</td>
+                        <td class="p-1.5 font-semibold text-white"><span class="mr-1">${t.flag}</span> ${t.name}</td>
+                        <td class="p-1.5 font-bold text-center text-gporange">${item.points}</td>
+                        <td class="p-1.5 text-center text-zinc-400">${item.wins}</td>
                     </tr>
                 `;
             }).join('');
@@ -518,7 +523,8 @@
                 const team = state.teams.find(t => t.id === driver.teamId);
                 const carStars = team ? (team.stars || 3) : 3;
                 const driverStars = driver.stars || 3;
-                const score = (driverStars * 10) + (carStars * 10) + (Math.random() * 40);
+                // Aumentada a volatilidade: multiplicadores ajustados + Math.random até 80 (maior aleatoriedade)
+                const score = (driverStars * 12) + (carStars * 10) + (Math.random() * 80);
                 return {
                     driver: driver,
                     score: score
@@ -528,8 +534,10 @@
             let raceResults = [];
             let raceFatalities = [];
 
-            racePerformances.forEach((item, index) => {
-                const isFatal = Math.random() * 100 < state.mortalityRate;
+            racePerformances.forEach((item) => {
+                const randVal = Math.random() * 100;
+                const isFatal = randVal < state.mortalityRate;
+                const isDNF = !isFatal && (Math.random() * 100 < (state.dnfRate || 15));
 
                 if (isFatal) {
                     item.driver.status = 'DEAD';
@@ -540,6 +548,18 @@
                         driverFlag: item.driver.flag,
                         teamId: item.driver.teamId,
                         status: 'FATAL_ACCIDENT',
+                        reason: 'Acidente Fatal',
+                        position: null
+                    });
+                } else if (isDNF) {
+                    const reason = DNF_REASONS[Math.floor(Math.random() * DNF_REASONS.length)];
+                    raceResults.push({
+                        driverId: item.driver.id,
+                        driverName: item.driver.name,
+                        driverFlag: item.driver.flag,
+                        teamId: item.driver.teamId,
+                        status: 'DNF',
+                        reason: reason,
                         position: null
                     });
                 } else {
@@ -549,17 +569,19 @@
                         driverFlag: item.driver.flag,
                         teamId: item.driver.teamId,
                         status: 'FINISHED',
+                        reason: null,
                         position: 0
                     });
                 }
             });
 
             let finished = raceResults.filter(r => r.status === 'FINISHED');
+            let dnfs = raceResults.filter(r => r.status === 'DNF');
             let deads = raceResults.filter(r => r.status === 'FATAL_ACCIDENT');
 
             finished.forEach((res, i) => res.position = i + 1);
 
-            race.results = [...finished, ...deads];
+            race.results = [...finished, ...dnfs, ...deads];
             race.fatalities = raceFatalities.map(d => ({ name: d.name, flag: d.flag }));
             race.completed = true;
         }
@@ -582,24 +604,24 @@
         function renderRaceList() {
             const listEl = document.getElementById('race-list');
             if (state.races.length === 0) {
-                listEl.innerHTML = '<p class="text-xs text-zinc-500 italic p-2">Nenhum GP cadastrado.</p>';
+                listEl.innerHTML = '<p class="text-xs text-zinc-500 italic p-1.5">Nenhum GP cadastrado.</p>';
                 return;
             }
             listEl.innerHTML = state.races.map(r => {
                 const isSelected = r.id === state.selectedRaceId;
                 return `
-                    <div onclick="selectRace('${r.id}')" class="p-3 rounded-lg border cursor-pointer transition-all flex items-center justify-between ${isSelected ? 'bg-gpred/25 border-gpred' : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700'}">
+                    <div onclick="selectRace('${r.id}')" class="p-2 rounded-lg border cursor-pointer transition-all flex items-center justify-between ${isSelected ? 'bg-gporange/20 border-gporange' : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700'}">
                         <div class="flex items-center space-x-2">
-                            <span class="text-lg">${r.flag}</span>
+                            <span class="text-base">${r.flag}</span>
                             <div>
-                                <h4 class="text-xs font-bold text-white">${r.name}</h4>
+                                <h4 class="text-xs font-bold text-white leading-tight">${r.name}</h4>
                                 <p class="text-[10px] text-zinc-400">${r.track}</p>
                             </div>
                         </div>
                         <div>
                             ${r.completed ? 
-                                '<span class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded">Concluída</span>' : 
-                                '<span class="text-[10px] bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded">Pendente</span>'}
+                                '<span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-1.5 py-0.5 rounded">Concluída</span>' : 
+                                '<span class="text-[9px] bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded">Pendente</span>'}
                         </div>
                     </div>
                 `;
@@ -623,7 +645,7 @@
                 document.getElementById('race-detail-status').className = "hidden";
                 btnEdit.classList.add('hidden');
                 btnDelete.classList.add('hidden');
-                document.getElementById('race-results-body').innerHTML = `<tr><td colspan="5" class="p-6 text-center text-zinc-500">Adicione ou selecione um GP.</td></tr>`;
+                document.getElementById('race-results-body').innerHTML = `<tr><td colspan="5" class="p-4 text-center text-zinc-500">Adicione ou selecione um GP.</td></tr>`;
                 return;
             }
 
@@ -636,10 +658,10 @@
             const statusEl = document.getElementById('race-detail-status');
             statusEl.classList.remove('hidden');
             if (race.completed) {
-                statusEl.className = "px-3 py-1 rounded-full text-xs font-semibold bg-emerald-950 text-emerald-400 border border-emerald-800";
+                statusEl.className = "px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-950 text-emerald-400 border border-emerald-800";
                 statusEl.innerText = "GP Realizado";
             } else {
-                statusEl.className = "px-3 py-1 rounded-full text-xs font-semibold bg-zinc-800 text-zinc-400";
+                statusEl.className = "px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-zinc-800 text-zinc-400";
                 statusEl.innerText = "Não Realizado";
             }
 
@@ -647,11 +669,11 @@
             if (race.completed && race.fatalities && race.fatalities.length > 0) {
                 incidentBox.classList.remove('hidden');
                 incidentBox.innerHTML = `
-                    <div class="flex items-center gap-2 font-bold mb-1">
-                        <i data-lucide="alert-triangle" class="w-4 h-4 text-red-500"></i>
+                    <div class="flex items-center gap-1.5 font-bold mb-0.5 text-orange-400">
+                        <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>
                         <span>Ocorrência Grave Registrada:</span>
                     </div>
-                    <ul class="list-disc list-inside text-xs space-y-1">
+                    <ul class="list-disc list-inside text-[11px] space-y-0.5">
                         ${race.fatalities.map(f => `<li><span class="font-bold text-white">${f.flag} ${f.name}</span> sofreu um acidente fatal nesta etapa.</li>`).join('')}
                     </ul>
                 `;
@@ -662,28 +684,32 @@
 
             const body = document.getElementById('race-results-body');
             if (!race.completed) {
-                body.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-zinc-500">Esta etapa ainda não foi simulada.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-zinc-500">Esta etapa ainda não foi simulada.</td></tr>`;
                 return;
             }
 
-            body.innerHTML = race.results.map((res, i) => {
+            body.innerHTML = race.results.map((res) => {
                 const team = state.teams.find(t => t.id === res.teamId);
                 const isFatal = res.status === 'FATAL_ACCIDENT';
+                const isDNF = res.status === 'DNF';
                 const points = (res.position > 0 && res.position <= 5) ? POINTS_MAP[res.position - 1] : 0;
 
+                let statusBadge = '<span class="text-[9px] bg-zinc-800 text-zinc-300 px-1.5 py-0.5 rounded">FINALIZOU</span>';
+                if (isFatal) {
+                    statusBadge = '<span class="text-[9px] font-bold bg-red-900 text-white px-1.5 py-0.5 rounded">ACIDENTE FATAL</span>';
+                } else if (isDNF) {
+                    statusBadge = `<span class="text-[9px] font-bold bg-amber-950 text-amber-400 border border-amber-800/60 px-1.5 py-0.5 rounded">DNF (${res.reason})</span>`;
+                }
+
                 return `
-                    <tr class="${isFatal ? 'bg-red-950/30 text-red-400' : 'hover:bg-zinc-800/30'}">
-                        <td class="p-2 font-bold ${res.position === 1 ? 'text-gpgold' : ''}">${isFatal ? 'DNF' : `${res.position}º`}</td>
-                        <td class="p-2 font-semibold">
+                    <tr class="${isFatal ? 'bg-red-950/20 text-red-400' : isDNF ? 'bg-amber-950/10 text-amber-200/70' : 'hover:bg-zinc-800/30'}">
+                        <td class="p-1.5 font-bold ${res.position === 1 ? 'text-gporange' : ''}">${(isFatal || isDNF) ? 'DNF' : `${res.position}º`}</td>
+                        <td class="p-1.5 font-semibold">
                             <span>${res.driverFlag}</span> ${res.driverName}
                         </td>
-                        <td class="p-2 text-zinc-400">${team ? `${team.flag} ${team.name}` : '-'}</td>
-                        <td class="p-2 text-center">
-                            ${isFatal ? 
-                                '<span class="text-[10px] font-bold bg-red-900 text-white px-2 py-0.5 rounded">ACIDENTE FATAL</span>' : 
-                                '<span class="text-[10px] bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded">FINALIZOU</span>'}
-                        </td>
-                        <td class="p-2 text-center font-bold text-gpgold">${points > 0 ? `+${points}` : '-'}</td>
+                        <td class="p-1.5 text-zinc-400">${team ? `${team.flag} ${team.name}` : '-'}</td>
+                        <td class="p-1.5 text-center">${statusBadge}</td>
+                        <td class="p-1.5 text-center font-bold text-gporange">${points > 0 ? `+${points}` : '-'}</td>
                     </tr>
                 `;
             }).join('');
@@ -746,36 +772,36 @@
                 const starsCount = team.stars || 3;
                 const starsStr = '⭐'.repeat(starsCount);
                 return `
-                    <div class="bg-gpcard border border-zinc-800 rounded-xl p-4 shadow-lg space-y-3">
-                        <div class="flex justify-between items-center border-b border-zinc-800 pb-2">
+                    <div class="bg-gpcard border border-zinc-800 rounded-xl p-3 shadow-md space-y-2">
+                        <div class="flex justify-between items-center border-b border-zinc-800 pb-1.5">
                             <div>
-                                <h3 class="font-bold text-white text-base flex items-center gap-1.5">
-                                    <span class="text-lg">${team.flag}</span> ${team.name}
+                                <h3 class="font-bold text-white text-xs flex items-center gap-1.5">
+                                    <span>${team.flag}</span> ${team.name}
                                 </h3>
-                                <p class="text-[11px] text-amber-400">Carro: ${starsStr}</p>
+                                <p class="text-[10px] text-gporange">Carro: ${starsStr}</p>
                             </div>
                             <div class="flex gap-1">
-                                <button onclick="openTeamModal('${team.id}')" class="text-zinc-400 hover:text-white p-1"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
-                                <button onclick="deleteTeam('${team.id}')" class="text-zinc-500 hover:text-gpred p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                                <button onclick="openTeamModal('${team.id}')" class="text-zinc-400 hover:text-white p-1"><i data-lucide="edit-2" class="w-3 h-3"></i></button>
+                                <button onclick="deleteTeam('${team.id}')" class="text-zinc-500 hover:text-gporange p-1"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
                             </div>
                         </div>
 
-                        <div class="space-y-1.5">
-                            <span class="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Pilotos Titulares</span>
-                            ${teamDrivers.length === 0 ? '<p class="text-xs text-zinc-600 italic">Nenhum piloto alocado</p>' : ''}
+                        <div class="space-y-1">
+                            <span class="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Pilotos Titulares</span>
+                            ${teamDrivers.length === 0 ? '<p class="text-[11px] text-zinc-600 italic">Nenhum piloto alocado</p>' : ''}
                             ${teamDrivers.map(d => {
                                 const dStars = '⭐'.repeat(d.stars || 3);
                                 return `
-                                    <div class="flex justify-between items-center bg-zinc-900/60 p-2 rounded border border-zinc-800/80 text-xs">
+                                    <div class="flex justify-between items-center bg-zinc-900/80 p-1.5 rounded border border-zinc-800/80 text-xs">
                                         <div>
                                             <span class="${d.status === 'DEAD' ? 'line-through text-red-500' : 'text-zinc-200'} font-semibold">
                                                 ${d.flag} ${d.name} ${d.status === 'DEAD' ? '(FALECIDO)' : ''}
                                             </span>
-                                            <span class="block text-[10px] text-amber-400">Habilidade: ${dStars}</span>
+                                            <span class="block text-[9px] text-gporange">Habilidade: ${dStars}</span>
                                         </div>
-                                        <div class="flex gap-1">
-                                            <button onclick="openDriverModal('${d.id}')" class="text-zinc-400 hover:text-white p-1"><i data-lucide="edit-2" class="w-3 h-3"></i></button>
-                                            <button onclick="deleteDriver('${d.id}')" class="text-zinc-500 hover:text-red-500 p-1"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                                        <div class="flex gap-0.5">
+                                            <button onclick="openDriverModal('${d.id}')" class="text-zinc-400 hover:text-white p-0.5"><i data-lucide="edit-2" class="w-3 h-3"></i></button>
+                                            <button onclick="deleteDriver('${d.id}')" class="text-zinc-500 hover:text-red-500 p-0.5"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
                                         </div>
                                     </div>
                                 `;
@@ -788,20 +814,20 @@
             const freeDrivers = state.drivers.filter(d => !d.teamId);
             if (freeDrivers.length > 0) {
                 grid.innerHTML += `
-                    <div class="bg-zinc-900/40 border border-dashed border-zinc-800 rounded-xl p-4 space-y-3">
-                        <h3 class="font-bold text-zinc-400 text-sm">Sem Equipe / Reservas</h3>
-                        <div class="space-y-1.5">
+                    <div class="bg-zinc-900/40 border border-dashed border-zinc-800 rounded-xl p-3 space-y-2">
+                        <h3 class="font-bold text-zinc-400 text-xs">Sem Equipe / Reservas</h3>
+                        <div class="space-y-1">
                             ${freeDrivers.map(d => {
                                 const dStars = '⭐'.repeat(d.stars || 3);
                                 return `
-                                    <div class="flex justify-between items-center bg-zinc-900 p-2 rounded text-xs">
+                                    <div class="flex justify-between items-center bg-zinc-900 p-1.5 rounded text-xs">
                                         <div>
                                             <span class="text-zinc-300 font-semibold">${d.flag} ${d.name}</span>
-                                            <span class="block text-[10px] text-amber-400">Habilidade: ${dStars}</span>
+                                            <span class="block text-[9px] text-gporange">Habilidade: ${dStars}</span>
                                         </div>
-                                        <div class="flex gap-1">
-                                            <button onclick="openDriverModal('${d.id}')" class="text-zinc-400 hover:text-white p-1"><i data-lucide="edit-2" class="w-3 h-3"></i></button>
-                                            <button onclick="deleteDriver('${d.id}')" class="text-zinc-500 hover:text-red-500 p-1"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                                        <div class="flex gap-0.5">
+                                            <button onclick="openDriverModal('${d.id}')" class="text-zinc-400 hover:text-white p-0.5"><i data-lucide="edit-2" class="w-3 h-3"></i></button>
+                                            <button onclick="deleteDriver('${d.id}')" class="text-zinc-500 hover:text-red-500 p-0.5"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
                                         </div>
                                     </div>
                                 `;
@@ -940,19 +966,27 @@
             const yearInput = document.getElementById('setting-year');
             const mortInput = document.getElementById('setting-mortality');
             const mortVal = document.getElementById('setting-mortality-val');
+            const dnfInput = document.getElementById('setting-dnf');
+            const dnfVal = document.getElementById('setting-dnf-val');
 
             yearInput.value = state.year;
             mortInput.value = state.mortalityRate;
             mortVal.innerText = `${state.mortalityRate}%`;
+            dnfInput.value = state.dnfRate !== undefined ? state.dnfRate : 15.0;
+            dnfVal.innerText = `${dnfInput.value}%`;
 
             mortInput.addEventListener('input', (e) => {
                 mortVal.innerText = `${e.target.value}%`;
+            });
+            dnfInput.addEventListener('input', (e) => {
+                dnfVal.innerText = `${e.target.value}%`;
             });
         }
 
         function saveSettings() {
             state.year = parseInt(document.getElementById('setting-year').value) || 1951;
-            state.mortalityRate = parseFloat(document.getElementById('setting-mortality').value) || 5.0;
+            state.mortalityRate = parseFloat(document.getElementById('setting-mortality').value) || 4.0;
+            state.dnfRate = parseFloat(document.getElementById('setting-dnf').value) || 15.0;
             saveToLocalStorage();
             renderAll();
             showToast("Configurações salvas!");
