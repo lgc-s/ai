@@ -1,21 +1,31 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Corrida Histórica</title>
+    <title>Simulador de Corrida Histórica GP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        gporange: '#ff6600',
-                        gporangehover: '#e65c00',
-                        gpdark: '#121212',
-                        gpcard: '#1e1e1e',
-                        gpgold: '#ffb703'
+                        retro: {
+                            bg: '#f8f6f0',
+                            surface: '#ffffff',
+                            brown: '#7a5d52',
+                            card: '#fcfbf8',
+                            border: '#e2dcd3',
+                            borderLight: '#f0ece1',
+                            text: '#22211f',
+                            muted: '#666159',
+                            green: '#2d5a44',
+                            greenHover: '#234735',
+                            red: '#a83232',
+                            amber: '#c97a24',
+                            emerald: '#1b7049',
+                            gold: '#d97706'
+                        }
                     }
                 }
             }
@@ -23,180 +33,297 @@
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,400;0,700;1,400&display=swap');
-        body {
-            font-family: 'Titillium Web', sans-serif;
-            background-color: #121212;
-            color: #e4e4e7;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
+
+        body {
+            background-color: #f8f6f0;
+            color: #22211f;
+        }
+
         .custom-scrollbar::-webkit-scrollbar {
             width: 5px;
             height: 5px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: #1e1e1e;
+            background: #f8f6f0;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #ff6600;
+            background: #dcd6cd;
             border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #2d5a44;
+        }
+
+        .sq-box {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 10px;
+            line-height: 1;
+            flex-shrink: 0;
+            border-radius: 0;
+            transition: opacity 0.1s ease;
+        }
+
+        .sq-box-header {
+            width: 22px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 9px;
+            border-radius: 3px;
+        }
+
+        .flag-img {
+            border: 1px solid #bbbbbb;
+            width: 22px;
+            object-fit: cover;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .dead-text {
+            color: #b91c1c;
+            font-weight: 700;
+            font-size: 9.5px;
+            margin-left: 4px;
+            letter-spacing: 0.02em;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col text-xs sm:text-sm">
+<body class="min-h-screen flex flex-col text-xs leading-normal">
 
-    <header class="bg-gpcard border-b border-zinc-800 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-3 py-2 flex flex-wrap items-center justify-between gap-2">
-            <div class="flex items-center space-x-2">
-                <div class="bg-gporange text-black p-1.5 rounded-lg font-black text-lg italic tracking-wider">GP</div>
+    <header class="bg-retro-surface border-b border-retro-border sticky top-0 z-50 shadow-sm">
+        <div class="max-w-[1600px] w-full mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="bg-retro-green text-white px-2.5 py-1 rounded-md font-bold text-sm tracking-wide shadow-sm">GP</div>
                 <div>
-                    <h1 class="text-base font-bold tracking-wide text-white uppercase leading-none">Simulador de GP</h1>
-                    <p class="text-[11px] text-zinc-400">Temporada <span id="header-year" class="text-gporange font-bold">1951</span></p>
+                    <h1 class="text-xs font-bold text-retro-text uppercase tracking-tight leading-tight">Simulador de Grande Prêmio</h1>
+                    <p class="text-[10px] text-retro-muted">Temporada <span id="header-year" class="font-bold text-retro-green">1965</span></p>
                 </div>
             </div>
 
-            <nav class="flex space-x-1 bg-zinc-900 p-1 rounded-lg border border-zinc-800">
-                <button onclick="switchTab('standings')" id="tab-standings" class="tab-btn px-3 py-1.5 rounded-md text-xs font-semibold transition-all bg-gporange text-black">
-                    <i data-lucide="trophy" class="inline-block w-3.5 h-3.5 mr-1"></i> Classificação
+            <nav class="flex items-center gap-1 bg-retro-bg p-1 rounded-lg border border-retro-border">
+                <button onclick="switchTab('standings')" id="tab-standings" class="tab-btn px-3 py-1.5 rounded-md font-medium transition-all bg-retro-green text-white shadow-sm">
+                    <i data-lucide="trophy" class="inline-block w-3.5 h-3.5 mr-1 -mt-0.5"></i>Classificação & Matrizes
                 </button>
-                <button onclick="switchTab('races')" id="tab-races" class="tab-btn px-3 py-1.5 rounded-md text-xs font-semibold transition-all text-zinc-400 hover:text-white">
-                    <i data-lucide="flag" class="inline-block w-3.5 h-3.5 mr-1"></i> Corridas
+                <button onclick="switchTab('races')" id="tab-races" class="tab-btn px-3 py-1.5 rounded-md font-medium transition-all text-retro-muted hover:text-retro-green hover:bg-retro-surface">
+                    <i data-lucide="flag" class="inline-block w-3.5 h-3.5 mr-1 -mt-0.5"></i>Corridas
                 </button>
-                <button onclick="switchTab('teams')" id="tab-teams" class="tab-btn px-3 py-1.5 rounded-md text-xs font-semibold transition-all text-zinc-400 hover:text-white">
-                    <i data-lucide="users" class="inline-block w-3.5 h-3.5 mr-1"></i> Equipes & Pilotos
+                <button onclick="switchTab('teams')" id="tab-teams" class="tab-btn px-3 py-1.5 rounded-md font-medium transition-all text-retro-muted hover:text-retro-green hover:bg-retro-surface">
+                    <i data-lucide="users" class="inline-block w-3.5 h-3.5 mr-1 -mt-0.5"></i>Equipes & Pilotos
                 </button>
-                <button onclick="switchTab('settings')" id="tab-settings" class="tab-btn px-3 py-1.5 rounded-md text-xs font-semibold transition-all text-zinc-400 hover:text-white">
-                    <i data-lucide="settings" class="inline-block w-3.5 h-3.5 mr-1"></i> Configurações
+                <button onclick="switchTab('settings')" id="tab-settings" class="tab-btn px-3 py-1.5 rounded-md font-medium transition-all text-retro-muted hover:text-retro-green hover:bg-retro-surface">
+                    <i data-lucide="sliders" class="inline-block w-3.5 h-3.5 mr-1 -mt-0.5"></i>Configurações
                 </button>
             </nav>
         </div>
     </header>
 
-    <main class="flex-grow max-w-7xl w-full mx-auto p-3 sm:p-4 space-y-4">
+    <main class="flex-grow max-w-[1600px] w-full mx-auto p-3.5 space-y-3.5">
 
-        <div class="bg-gradient-to-r from-zinc-900 via-gpcard to-zinc-900 p-3 rounded-xl border border-zinc-800 flex flex-wrap items-center justify-between gap-3 shadow-md">
-            <div class="flex items-center space-x-4">
-                <div class="text-center border-r border-zinc-700 pr-4">
-                    <span class="block text-[10px] uppercase text-zinc-400">Progresso</span>
-                    <span id="season-progress" class="text-base font-bold text-gporange">0 / 7 GPs</span>
-                </div>
+        <div class="bg-retro-surface p-3 rounded-xl border border-retro-border shadow-sm flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-5">
                 <div>
-                    <span class="block text-[10px] uppercase text-zinc-400">Próxima Etapa</span>
-                    <span id="next-gp-name" class="text-sm font-semibold text-white">GP 1 - Reino Unido</span>
+                    <span class="block text-[10px] uppercase text-retro-muted font-bold tracking-wider">Progresso</span>
+                    <span id="season-progress" class="text-xs font-bold text-retro-green">0 / 0 GPs</span>
+                </div>
+                <div class="border-l border-retro-border pl-5">
+                    <span class="block text-[10px] uppercase text-retro-muted font-bold tracking-wider">Próxima Etapa</span>
+                    <span id="next-gp-name" class="text-xs font-semibold text-retro-text flex items-center gap-1.5">Nenhum GP cadastrado</span>
                 </div>
             </div>
+
             <div class="flex items-center gap-2">
-                <button onclick="simulateNextRace()" id="btn-sim-next" class="bg-gporange hover:bg-gporangehover text-black font-bold py-1.5 px-3 rounded-lg flex items-center space-x-1.5 text-xs transition-all shadow-md active:scale-95">
+                <button onclick="simulateNextRace()" id="btn-sim-next" class="bg-retro-green hover:bg-retro-greenHover text-white font-medium py-1.5 px-3 rounded-lg flex items-center gap-1.5 transition-all shadow-sm">
                     <i data-lucide="play" class="w-3.5 h-3.5"></i>
                     <span>Simular Próximo GP</span>
                 </button>
-                <button onclick="simulateSeason()" id="btn-sim-all" class="bg-zinc-800 hover:bg-zinc-700 text-gporange font-bold py-1.5 px-3 rounded-lg flex items-center space-x-1.5 text-xs transition-all border border-gporange/30">
+                <button onclick="simulateSeason()" id="btn-sim-all" class="bg-retro-surface hover:bg-retro-bg text-retro-text font-medium py-1.5 px-3 rounded-lg flex items-center gap-1.5 border border-retro-border transition-all">
                     <i data-lucide="fast-forward" class="w-3.5 h-3.5"></i>
                     <span>Simular Temporada</span>
                 </button>
-                <button onclick="resetSeason()" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white p-1.5 rounded-lg border border-zinc-800" title="Resetar Resultados">
+                <button onclick="resetSeason()" class="bg-retro-surface hover:bg-retro-bg text-retro-muted hover:text-retro-text p-1.5 rounded-lg border border-retro-border transition-all" title="Resetar Resultados">
                     <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                 </button>
             </div>
         </div>
 
-        <section id="view-standings" class="tab-content space-y-4">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-
-                <div class="bg-gpcard rounded-xl border border-zinc-800 p-3.5 shadow-lg">
-                    <div class="flex items-center justify-between mb-2.5 border-b border-zinc-800 pb-2">
-                        <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
-                            <i data-lucide="user" class="text-gporange w-4 h-4"></i> Campeonato de Pilotos
+        <section id="view-standings" class="tab-content space-y-3.5">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-3.5">
+                <div class="bg-retro-surface rounded-xl border border-retro-border p-3 space-y-2 shadow-sm">
+                    <div class="flex justify-between items-center border-b border-retro-borderLight pb-1.5">
+                        <h2 class="font-bold text-retro-text flex items-center gap-1.5 text-xs uppercase tracking-tight">
+                            <i data-lucide="user" class="text-retro-green w-4 h-4"></i> Campeonato de Pilotos
                         </h2>
-                        <span class="text-[10px] text-zinc-400 uppercase tracking-wider">Top 5 pontua</span>
+                        <span id="scoring-rule-drivers" class="text-[10px] text-retro-muted font-medium bg-retro-bg px-2 py-0.5 rounded-full border border-retro-borderLight">Top 6 pontuam</span>
                     </div>
                     <div class="overflow-x-auto custom-scrollbar">
-                        <table class="w-full text-left text-xs">
-                            <thead class="bg-zinc-900/80 text-zinc-400 uppercase text-[10px]">
-                                <tr>
-                                    <th class="p-1.5">Pos</th>
-                                    <th class="p-1.5">Piloto</th>
-                                    <th class="p-1.5">Equipe</th>
-                                    <th class="p-1.5 text-center">Pts</th>
-                                    <th class="p-1.5 text-center">Vit</th>
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-retro-border text-retro-muted text-[10px] uppercase font-bold">
+                                    <th class="py-1 px-1.5 w-7">Pos</th>
+                                    <th class="py-1 px-1.5">Piloto</th>
+                                    <th class="py-1 px-1.5">Equipe</th>
+                                    <th class="py-1 px-1.5 text-center w-12">Pts</th>
+                                    <th class="py-1 px-1.5 text-center w-10">Vit</th>
                                 </tr>
                             </thead>
-                            <tbody id="driver-standings-body" class="divide-y divide-zinc-800/50">
+                            <tbody id="driver-standings-body" class="divide-y divide-retro-borderLight text-[11px]">
+                                <tr><td colspan="5" class="py-3 text-center text-retro-muted italic">Nenhum piloto cadastrado.</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <div class="bg-gpcard rounded-xl border border-zinc-800 p-3.5 shadow-lg">
-                    <div class="flex items-center justify-between mb-2.5 border-b border-zinc-800 pb-2">
-                        <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
-                            <i data-lucide="shield" class="text-gporange w-4 h-4"></i> Campeonato de Construtores
+                <div class="bg-retro-surface rounded-xl border border-retro-border p-3 space-y-2 shadow-sm">
+                    <div class="flex justify-between items-center border-b border-retro-borderLight pb-1.5">
+                        <h2 class="font-bold text-retro-text flex items-center gap-1.5 text-xs uppercase tracking-tight">
+                            <i data-lucide="shield" class="text-retro-green w-4 h-4"></i> Campeonato de Construtores
                         </h2>
-                        <span class="text-[10px] text-zinc-400 uppercase tracking-wider">Soma da equipe</span>
+                        <span class="text-[10px] text-retro-muted font-medium bg-retro-bg px-2 py-0.5 rounded-full border border-retro-borderLight">Soma da equipe</span>
                     </div>
                     <div class="overflow-x-auto custom-scrollbar">
-                        <table class="w-full text-left text-xs">
-                            <thead class="bg-zinc-900/80 text-zinc-400 uppercase text-[10px]">
-                                <tr>
-                                    <th class="p-1.5">Pos</th>
-                                    <th class="p-1.5">Equipe</th>
-                                    <th class="p-1.5 text-center">Pts</th>
-                                    <th class="p-1.5 text-center">Vit</th>
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-retro-border text-retro-muted text-[10px] uppercase font-bold">
+                                    <th class="py-1 px-1.5 w-7">Pos</th>
+                                    <th class="py-1 px-1.5">Equipe</th>
+                                    <th class="py-1 px-1.5 text-center w-12">Pts</th>
+                                    <th class="py-1 px-1.5 text-center w-10">Vit</th>
                                 </tr>
                             </thead>
-                            <tbody id="team-standings-body" class="divide-y divide-zinc-800/50">
+                            <tbody id="team-standings-body" class="divide-y divide-retro-borderLight text-[11px]">
+                                <tr><td colspan="4" class="py-3 text-center text-retro-muted italic">Nenhuma equipe cadastrada.</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-
             </div>
+
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-3.5">
+                <div class="bg-retro-surface rounded-xl border border-retro-border p-3 space-y-2 shadow-sm">
+                    <div class="flex flex-wrap justify-between items-center border-b border-retro-borderLight pb-1.5 gap-2">
+                        <h2 class="font-bold text-retro-text flex items-center gap-1.5 text-xs uppercase tracking-tight">
+                            <i data-lucide="grid" class="text-retro-green w-4 h-4"></i> Matriz por Corrida (Pilotos)
+                        </h2>
+                        <div class="flex items-center gap-1.5 text-[9px] text-retro-muted">
+                            <span class="sq-box-header bg-amber-100 text-amber-900 border border-amber-300">1</span> 1º
+                            <span class="sq-box-header bg-slate-100 text-slate-800 border border-slate-300">2</span> 2º
+                            <span class="sq-box-header bg-orange-100 text-orange-900 border border-orange-300">3</span> 3º
+                            <span class="sq-box-header bg-emerald-100 text-emerald-900 border border-emerald-300">Pts</span> Pontua
+                            <span class="sq-box-header bg-stone-200 text-stone-800 border border-stone-300">R</span> DNF
+                            <span class="sq-box-header bg-red-100 text-red-900 border border-red-300">FTL</span> Fatal
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left border-collapse border-hidden">
+                            <thead>
+                                <tr id="matrix-driver-header" class="border-b border-retro-border text-retro-muted text-[10px] uppercase font-bold">
+                                    <th class="py-1 px-1.5 whitespace-nowrap">Piloto</th>
+                                    <th class="py-1 px-1.5 whitespace-nowrap">Equipe</th>
+                                </tr>
+                            </thead>
+                            <tbody id="matrix-driver-body" class="divide-y divide-retro-borderLight text-[11px]">
+                                <tr><td colspan="2" class="py-3 text-center text-retro-muted italic">Nenhum dado disponível.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-retro-surface rounded-xl border border-retro-border p-3 space-y-2 shadow-sm">
+                    <div class="flex flex-wrap justify-between items-center border-b border-retro-borderLight pb-1.5 gap-2">
+                        <h2 class="font-bold text-retro-text flex items-center gap-1.5 text-xs uppercase tracking-tight">
+                            <i data-lucide="layout-grid" class="text-retro-green w-4 h-4"></i> Matriz por Corrida (Equipes)
+                        </h2>
+                        <div class="flex items-center gap-1.5 text-[9px] text-retro-muted">
+                            <span class="sq-box-header bg-amber-100 text-amber-900 border border-amber-300">1</span> 1º
+                            <span class="sq-box-header bg-slate-100 text-slate-800 border border-slate-300">2</span> 2º
+                            <span class="sq-box-header bg-orange-100 text-orange-900 border border-orange-300">3</span> 3º
+                            <span class="sq-box-header bg-emerald-100 text-emerald-900 border border-emerald-300">Pts</span> Pontua
+                            <span class="sq-box-header bg-stone-200 text-stone-800 border border-stone-300">R</span> DNF
+                            <span class="sq-box-header bg-red-100 text-red-900 border border-red-300">FTL</span> Fatal
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left border-collapse border-hidden">
+                            <thead>
+                                <tr id="matrix-team-header" class="border-b border-retro-border text-retro-muted text-[10px] uppercase font-bold">
+                                    <th class="py-1 px-1.5 whitespace-nowrap">Equipe</th>
+                                </tr>
+                            </thead>
+                            <tbody id="matrix-team-body" class="divide-y divide-retro-borderLight text-[11px]">
+                                <tr><td class="py-3 text-center text-retro-muted italic">Nenhum dado disponível.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
         </section>
 
-        <section id="view-races" class="tab-content hidden space-y-4">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                <div class="bg-gpcard rounded-xl border border-zinc-800 p-3 h-fit space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h2 class="text-xs font-bold text-white flex items-center gap-1.5 uppercase">
-                            <i data-lucide="calendar" class="text-gporange w-4 h-4"></i> Calendário
+        <section id="view-races" class="tab-content hidden space-y-3.5">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-3.5">
+                <div class="bg-retro-surface rounded-xl border border-retro-border p-3 h-fit space-y-2 shadow-sm">
+                    <div class="flex justify-between items-center border-b border-retro-borderLight pb-1.5">
+                        <h2 class="font-bold text-retro-text flex items-center gap-1.5 uppercase text-[11px] tracking-tight">
+                            <i data-lucide="calendar" class="text-retro-green w-3.5 h-3.5"></i> Calendário
                         </h2>
-                        <button onclick="openRaceModal()" class="bg-gporange hover:bg-gporangehover text-black text-[11px] font-bold px-2 py-1 rounded flex items-center gap-1">
+                        <button onclick="openRaceModal()" class="bg-retro-green hover:bg-retro-greenHover text-white text-[11px] font-medium px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all shadow-sm">
                             <i data-lucide="plus" class="w-3 h-3"></i> Novo GP
                         </button>
                     </div>
-                    <div id="race-list" class="space-y-1.5">
+                    <div id="race-list" class="space-y-1">
+                        <p class="text-retro-muted italic text-center py-2">Nenhum GP cadastrado.</p>
                     </div>
                 </div>
 
-                <div class="lg:col-span-2 bg-gpcard rounded-xl border border-zinc-800 p-4 shadow-lg">
-                    <div id="race-detail-header" class="border-b border-zinc-800 pb-3 mb-3 flex flex-wrap justify-between items-center gap-2">
+                <div class="lg:col-span-2 bg-retro-surface rounded-xl border border-retro-border p-3 space-y-3 shadow-sm">
+                    <div id="race-detail-header" class="border-b border-retro-border pb-2 flex flex-wrap justify-between items-center gap-2">
                         <div>
-                            <h2 id="race-detail-title" class="text-base font-bold text-white">Selecione uma corrida</h2>
-                            <p id="race-detail-subtitle" class="text-xs text-zinc-400">Resultados completos e incidentes</p>
+                            <h2 id="race-detail-title" class="text-xs font-bold text-retro-text flex items-center gap-2">Selecione uma corrida</h2>
+                            <p id="race-detail-subtitle" class="text-[10px] text-retro-muted">Resultados, condições técnicas e eventos</p>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <button id="btn-edit-race" onclick="openRaceModal(state.selectedRaceId)" class="hidden text-xs bg-zinc-800 hover:bg-zinc-700 text-white px-2.5 py-1 rounded border border-zinc-700">Editar</button>
-                            <button id="btn-delete-race" onclick="deleteRace(state.selectedRaceId)" class="hidden text-xs bg-red-950 hover:bg-red-900 text-red-300 px-2.5 py-1 rounded border border-red-800">Excluir</button>
-                            <span id="race-detail-status" class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-zinc-800 text-zinc-400">Não Realizada</span>
+                        <div class="flex items-center gap-1.5">
+                            <button id="btn-edit-race" onclick="openRaceModal(state.selectedRaceId)" class="hidden text-[11px] bg-retro-bg hover:bg-retro-borderLight text-retro-text px-2.5 py-1 rounded-md border border-retro-border">Editar</button>
+                            <button id="btn-delete-race" onclick="deleteRace(state.selectedRaceId)" class="hidden text-[11px] bg-red-50 hover:bg-red-100 text-retro-red px-2.5 py-1 rounded-md border border-red-200">Excluir</button>
+                            <span id="race-detail-status" class="px-2 py-0.5 rounded text-[10px] font-semibold bg-retro-bg text-retro-muted border border-retro-border">Não Realizada</span>
                         </div>
                     </div>
 
-                    <div id="race-incidents-box" class="hidden mb-3 p-2.5 bg-orange-950/30 border border-orange-800/50 rounded-lg text-xs text-orange-200">
+                    <div id="race-events-box" class="hidden p-3 bg-retro-bg border-l-4 border-retro-green rounded-r-lg space-y-2">
+                        <h3 class="font-bold text-retro-green flex items-center gap-1.5 text-xs uppercase tracking-tight">
+                            <i data-lucide="newspaper" class="w-4 h-4"></i> Relatório & Categorias de Eventos do GP
+                        </h3>
+                        <div id="race-events-categorized" class="grid grid-cols-1 md:grid-cols-3 gap-2 pt-1">
+                        </div>
                     </div>
 
                     <div class="overflow-x-auto custom-scrollbar">
-                        <table class="w-full text-left text-xs">
-                            <thead class="bg-zinc-900/80 text-zinc-400 uppercase text-[10px]">
-                                <tr>
-                                    <th class="p-1.5">Pos</th>
-                                    <th class="p-1.5">Piloto</th>
-                                    <th class="p-1.5">Equipe</th>
-                                    <th class="p-1.5 text-center">Status</th>
-                                    <th class="p-1.5 text-center">Pontos</th>
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-retro-border text-retro-muted text-[10px] uppercase font-bold">
+                                    <th class="py-1 px-1.5 w-8">Pos</th>
+                                    <th class="py-1 px-1.5">Piloto</th>
+                                    <th class="py-1 px-1.5">Equipe</th>
+                                    <th class="py-1 px-1.5 text-center">Status / Comentário</th>
+                                    <th class="py-1 px-1.5 text-center w-12">Pontos</th>
                                 </tr>
                             </thead>
-                            <tbody id="race-results-body" class="divide-y divide-zinc-800/40 text-zinc-300">
+                            <tbody id="race-results-body" class="divide-y divide-retro-borderLight text-[11px]">
                                 <tr>
-                                    <td colspan="5" class="p-4 text-center text-zinc-500">Selecione ou simule um GP para visualizar os resultados completos.</td>
+                                    <td colspan="5" class="py-4 text-center text-retro-muted">Selecione ou simule um GP para visualizar os resultados.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -206,67 +333,135 @@
         </section>
 
         <section id="view-teams" class="tab-content hidden space-y-4">
-            <div class="flex flex-wrap justify-between items-center gap-3 bg-gpcard p-3 rounded-xl border border-zinc-800">
-                <h2 class="text-sm font-bold text-white flex items-center gap-2">
-                    <i data-lucide="user-plus" class="text-gporange w-4 h-4"></i> Gestão de Grid e Equipes
+            <div class="flex flex-wrap justify-between items-center gap-3 bg-retro-surface p-3 rounded-xl border border-retro-border shadow-sm">
+                <h2 class="font-bold text-retro-text flex items-center gap-2 text-xs uppercase tracking-tight">
+                    <i data-lucide="user-plus" class="text-retro-green w-4 h-4"></i> Gestão de Equipes e Pilotos
                 </h2>
                 <div class="flex gap-2">
-                    <button onclick="openTeamModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-semibold px-2.5 py-1.5 rounded border border-zinc-700 flex items-center gap-1">
+                    <button onclick="openTeamModal()" class="bg-retro-bg hover:bg-retro-borderLight text-retro-text font-medium px-3 py-1.5 rounded-lg border border-retro-border flex items-center gap-1.5 transition-all">
                         <i data-lucide="plus" class="w-3.5 h-3.5"></i> Nova Equipe
                     </button>
-                    <button onclick="openDriverModal()" class="bg-gporange hover:bg-gporangehover text-black text-xs font-bold px-2.5 py-1.5 rounded flex items-center gap-1">
+                    <button onclick="openDriverModal()" class="bg-retro-green hover:bg-retro-greenHover text-white font-medium px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all shadow-sm">
                         <i data-lucide="plus" class="w-3.5 h-3.5"></i> Novo Piloto
                     </button>
                 </div>
             </div>
 
-            <div id="teams-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div>
+                <h3 class="text-xs font-bold text-retro-text uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <i data-lucide="shield" class="w-3.5 h-3.5 text-retro-green"></i> Equipes Ativas & Elenco
+                </h3>
+                <div id="teams-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-3.5 border-t border-retro-border pt-3.5">
+                <div class="bg-retro-surface border border-retro-border rounded-xl p-3 space-y-2 shadow-sm">
+                    <div class="flex items-center justify-between border-b border-retro-borderLight pb-1.5">
+                        <h3 class="font-bold text-retro-text text-xs uppercase tracking-wider flex items-center gap-1.5">
+                            <i data-lucide="user-check" class="text-amber-600 w-3.5 h-3.5"></i> Dispensados & Livres no Mercado
+                        </h3>
+                        <span id="free-drivers-count" class="text-[10px] bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-full font-semibold">0 Pilotos</span>
+                    </div>
+                    <div id="free-drivers-list" class="space-y-1.5 custom-scrollbar max-h-60 overflow-y-auto">
+                        <p class="text-[10px] text-retro-muted italic py-2 text-center">Nenhum piloto livre no mercado.</p>
+                    </div>
+                </div>
+
+                <div class="bg-retro-surface border border-retro-border rounded-xl p-3 space-y-2 shadow-sm">
+                    <div class="flex items-center justify-between border-b border-retro-borderLight pb-1.5">
+                        <h3 class="font-bold text-retro-red text-xs uppercase tracking-wider flex items-center gap-1.5">
+                            <i data-lucide="skull" class="text-retro-red w-3.5 h-3.5"></i> Memorial (Pilotos Falecidos)
+                        </h3>
+                        <span id="dead-drivers-count" class="text-[10px] bg-red-50 text-retro-red border border-red-200 px-2 py-0.5 rounded-full font-semibold">0 Pilotos</span>
+                    </div>
+                    <div id="dead-drivers-list" class="space-y-1.5 custom-scrollbar max-h-60 overflow-y-auto">
+                        <p class="text-[10px] text-retro-muted italic py-2 text-center">Nenhuma fatalidade registrada nesta temporada.</p>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <section id="view-settings" class="tab-content hidden space-y-4">
-            <div class="max-w-xl mx-auto bg-gpcard rounded-xl border border-zinc-800 p-4 shadow-lg space-y-4 text-xs">
-                <h2 class="text-sm font-bold text-white border-b border-zinc-800 pb-2 flex items-center gap-2">
-                    <i data-lucide="sliders" class="text-gporange w-4 h-4"></i> Regras e Parâmetros da Temporada
+        <section id="view-settings" class="tab-content hidden space-y-3.5">
+            <div class="max-w-xl mx-auto bg-retro-surface rounded-xl border border-retro-border p-4 space-y-4 shadow-sm">
+                <h2 class="font-bold text-retro-text border-b border-retro-border pb-2 flex items-center gap-2 text-xs uppercase tracking-tight">
+                    <i data-lucide="sliders" class="text-retro-green w-4 h-4"></i> Regras e Parâmetros da Temporada
                 </h2>
 
-                <div class="space-y-3">
+                <div class="space-y-4">
                     <div>
-                        <label class="block font-semibold text-zinc-300 mb-1">Ano da Temporada</label>
-                        <input type="number" id="setting-year" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
+                        <label class="block font-semibold text-retro-text mb-1">Ano da Temporada</label>
+                        <input type="number" id="setting-year" class="w-full bg-retro-surface border border-retro-border rounded-lg p-1.5 text-retro-text focus:outline-none focus:border-retro-green">
                     </div>
 
-                    <div>
-                        <label class="block font-semibold text-zinc-300 mb-1">Taxa de Abandono (DNF / Breakdowns) por Piloto (%)</label>
-                        <div class="flex items-center gap-3">
-                            <input type="range" id="setting-dnf" min="0" max="50" step="1" class="w-full accent-gporange">
-                            <span id="setting-dnf-val" class="text-gporange font-bold text-base min-w-[45px]">15%</span>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-semibold text-retro-text mb-1">Taxa de Quebras (DNF %)</label>
+                            <div class="flex items-center gap-2">
+                                <input type="range" id="setting-dnf" min="0" max="50" step="1" class="w-full accent-retro-green">
+                                <span id="setting-dnf-val" class="font-bold text-retro-green min-w-[35px]">15%</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-retro-text mb-1">Taxa de Fatalidade (%)</label>
+                            <div class="flex items-center gap-2">
+                                <input type="range" id="setting-mortality" min="0" max="20" step="0.5" class="w-full accent-retro-green">
+                                <span id="setting-mortality-val" class="font-bold text-retro-red min-w-[35px]">4%</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block font-semibold text-zinc-300 mb-1">Taxa de Fatalidade por GP por Piloto (%)</label>
-                        <div class="flex items-center gap-3">
-                            <input type="range" id="setting-mortality" min="0" max="20" step="0.5" class="w-full accent-gporange">
-                            <span id="setting-mortality-val" class="text-gporange font-bold text-base min-w-[45px]">4%</span>
+                    <div class="border-t border-retro-borderLight pt-3">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="block font-semibold text-retro-text">Personalizador de Pontos (1º ao 10º)</label>
+                            <button onclick="resetPointsSystem()" class="text-[10px] text-retro-muted hover:text-retro-green underline">Restaurar Padrão</button>
+                        </div>
+                        <div id="points-editor-grid" class="grid grid-cols-5 gap-1.5">
                         </div>
                     </div>
 
-                    <div class="pt-3 border-t border-zinc-800">
-                        <button onclick="randomizeAllStars()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-gporange border border-gporange/40 font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1.5">
-                            <i data-lucide="star" class="w-4 h-4"></i> Aleatorizar Estrelas de Equipes e Pilotos (1 a 5)
-                        </button>
+                    <div class="border-t border-retro-borderLight pt-3 space-y-2">
+                        <div>
+                            <label class="block font-semibold text-retro-text">Aleatorizador de Estrelas</label>
+                            <p class="text-[10px] text-retro-muted">Redistribua aleatoriamente os níveis de habilidade e desempenho (0.5 a 5.0 ★)</p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <button onclick="randomizeStars('drivers')" class="flex flex-col items-center justify-center p-2.5 bg-retro-bg hover:bg-white hover:shadow-md border border-retro-border rounded-xl transition-all group">
+                                <div class="w-7 h-7 rounded-full bg-retro-surface border border-retro-border flex items-center justify-center text-retro-green mb-1 group-hover:scale-110 transition-transform">
+                                    <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                                </div>
+                                <span class="font-bold text-retro-text text-[11px]">Pilotos</span>
+                                <span class="text-[9px] text-retro-muted">Sortear Habilidades</span>
+                            </button>
+
+                            <button onclick="randomizeStars('teams')" class="flex flex-col items-center justify-center p-2.5 bg-retro-bg hover:bg-white hover:shadow-md border border-retro-border rounded-xl transition-all group">
+                                <div class="w-7 h-7 rounded-full bg-retro-surface border border-retro-border flex items-center justify-center text-retro-green mb-1 group-hover:scale-110 transition-transform">
+                                    <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+                                </div>
+                                <span class="font-bold text-retro-text text-[11px]">Equipes</span>
+                                <span class="text-[9px] text-retro-muted">Sortear Carros</span>
+                            </button>
+
+                            <button onclick="randomizeStars('all')" class="flex flex-col items-center justify-center p-2.5 bg-retro-bg hover:bg-white hover:shadow-md border border-retro-border rounded-xl transition-all group">
+                                <div class="w-7 h-7 rounded-full bg-retro-surface border border-retro-border flex items-center justify-center text-retro-green mb-1 group-hover:scale-110 transition-transform">
+                                    <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                                </div>
+                                <span class="font-bold text-retro-text text-[11px]">Ambos</span>
+                                <span class="text-[9px] text-retro-muted">Sortear Tudo</span>
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="pt-3 border-t border-zinc-800 flex flex-wrap gap-2">
-                        <button onclick="saveSettings()" class="bg-gporange hover:bg-gporangehover text-black font-bold py-1.5 px-4 rounded-lg">
-                            Salvar Alterações
+                    <div class="border-t border-retro-border pt-3 flex flex-wrap gap-2">
+                        <button onclick="saveSettings()" class="bg-retro-green hover:bg-retro-greenHover text-white font-medium py-1.5 px-3.5 rounded-lg shadow-sm">
+                            Salvar Configurações
                         </button>
-                        <button onclick="exportData()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-semibold py-1.5 px-3 rounded-lg border border-zinc-700 flex items-center gap-1">
-                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Exportar (JSON)
+                        <button onclick="exportData()" class="bg-retro-surface hover:bg-retro-bg text-retro-text font-medium py-1.5 px-3 rounded-lg border border-retro-border flex items-center gap-1.5">
+                            <i data-lucide="upload" class="w-3.5 h-3.5"></i> Exportar JSON
                         </button>
-                        <label class="bg-zinc-800 hover:bg-zinc-700 text-white font-semibold py-1.5 px-3 rounded-lg border border-zinc-700 cursor-pointer flex items-center gap-1">
-                            <i data-lucide="upload" class="w-3.5 h-3.5"></i> Importar JSON
+                        <label class="bg-retro-surface hover:bg-retro-bg text-retro-text font-medium py-1.5 px-3 rounded-lg border border-retro-border cursor-pointer flex items-center gap-1.5">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Importar JSON
                             <input type="file" id="import-file" onchange="importData(event)" class="hidden" accept=".json">
                         </label>
                     </div>
@@ -275,110 +470,121 @@
         </section>
     </main>
 
-    <div id="modal-team" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-gpcard border border-zinc-700 rounded-xl p-4 w-full max-w-md space-y-3 text-xs">
-            <h3 id="modal-team-title" class="text-sm font-bold text-white">Adicionar Equipe</h3>
+    <footer class="bg-retro-surface border-t border-retro-border py-2 text-center text-[10px] text-retro-muted mt-auto">
+        <span>Simulador GP &copy; 1965</span>
+    </footer>
+
+    <div id="modal-team" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-retro-surface border border-retro-border rounded-xl p-4 w-full max-w-sm space-y-3 shadow-xl">
+            <h3 id="modal-team-title" class="font-bold text-retro-text border-b border-retro-border pb-1.5 text-xs uppercase tracking-tight">Adicionar Equipe</h3>
             <input type="hidden" id="edit-team-id">
             <div>
-                <label class="block text-zinc-400 mb-1">Nome da Equipe</label>
-                <input type="text" id="team-name" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
+                <label class="block text-retro-muted mb-0.5 font-medium">Nome da Equipe</label>
+                <input type="text" id="team-name" class="w-full bg-retro-surface border border-retro-border rounded-lg p-1.5 text-retro-text focus:outline-none focus:border-retro-green">
             </div>
             <div>
-                <label class="block text-zinc-400 mb-1">Bandeira / País (Emoji)</label>
-                <input type="text" id="team-flag" placeholder="🇬🇧" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
+                <label class="block text-retro-muted mb-0.5 font-medium">Código do País (ex: gb, br, it, de, fr, us)</label>
+                <input type="text" id="team-flag" placeholder="gb" class="w-full bg-retro-surface border border-retro-border rounded-lg p-1.5 text-retro-text focus:outline-none focus:border-retro-green">
             </div>
             <div>
-                <label class="block text-zinc-400 mb-1">Qualidade do Carro (Estrelas: 1 a 5)</label>
-                <select id="team-stars" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
-                    <option value="1">⭐ 1 Estrela</option>
-                    <option value="2">⭐⭐ 2 Estrelas</option>
-                    <option value="3" selected>⭐⭐⭐ 3 Estrelas</option>
-                    <option value="4">⭐⭐⭐⭐ 4 Estrelas</option>
-                    <option value="5">⭐⭐⭐⭐⭐ 5 Estrelas</option>
-                </select>
+                <label class="block text-retro-muted mb-0.5 font-medium">Desempenho do Carro (0.5 a 5.0 ★)</label>
+                <input type="number" id="team-stars" step="0.5" min="0.5" max="5.0" value="3.0" class="w-full bg-retro-surface border border-retro-border rounded-lg p-1.5 text-retro-text focus:outline-none focus:border-retro-green">
             </div>
-            <div class="flex justify-end gap-2 pt-2">
-                <button onclick="closeModals()" class="px-3 py-1.5 bg-zinc-800 text-zinc-300 rounded-lg font-semibold">Cancelar</button>
-                <button onclick="saveTeam()" class="px-3 py-1.5 bg-gporange text-black rounded-lg font-bold">Salvar</button>
+            <div class="flex justify-end gap-2 pt-2 border-t border-retro-borderLight">
+                <button onclick="closeModals()" class="px-3.5 py-1.5 bg-retro-bg text-retro-text rounded-lg font-medium border border-retro-border">Cancelar</button>
+                <button onclick="saveTeam()" class="px-3.5 py-1.5 bg-retro-green text-white rounded-lg font-medium shadow-sm">Salvar</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-driver" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-gpcard border border-zinc-700 rounded-xl p-4 w-full max-w-md space-y-3 text-xs">
-            <h3 id="modal-driver-title" class="text-sm font-bold text-white">Adicionar Piloto</h3>
+    <div id="modal-driver" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-retro-surface border border-retro-border rounded-xl p-4 w-full max-w-sm space-y-3 shadow-xl">
+            <h3 id="modal-driver-title" class="font-bold text-retro-text border-b border-retro-border pb-1.5 text-xs uppercase tracking-tight">Adicionar Piloto</h3>
             <input type="hidden" id="edit-driver-id">
             <div>
-                <label class="block text-zinc-400 mb-1">Nome Completo</label>
-                <input type="text" id="driver-name" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
+                <label class="block text-retro-muted mb-0.5 font-medium">Nome Completo</label>
+                <input type="text" id="driver-name" class="w-full bg-retro-surface border border-retro-border rounded-lg p-1.5 text-retro-text focus:outline-none focus:border-retro-green">
             </div>
             <div>
-                <label class="block text-zinc-400 mb-1">Bandeira (Emoji)</label>
-                <input type="text" id="driver-flag" placeholder="🇬🇧" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
+                <label class="block text-retro-muted mb-0.5 font-medium">Código do País (ex: gb, br, it, de, fr, us)</label>
+                <input type="text" id="driver-flag" placeholder="gb" class="w-full bg-retro-surface border border-retro-border rounded-lg p-1.5 text-retro-text focus:outline-none focus:border-retro-green">
             </div>
             <div>
-                <label class="block text-zinc-400 mb-1">Equipe</label>
-                <select id="driver-team-select" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
+                <label class="block text-retro-muted mb-0.5 font-medium">Equipe</label>
+                <select id="driver-team-select" class="w-full bg-retro-surface border border-retro-border rounded-lg p-1.5 text-retro-text focus:outline-none focus:border-retro-green">
                 </select>
             </div>
             <div>
-                <label class="block text-zinc-400 mb-1">Habilidade do Piloto (Estrelas: 1 a 5)</label>
-                <select id="driver-stars" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
-                    <option value="1">⭐ 1 Estrela</option>
-                    <option value="2">⭐⭐ 2 Estrelas</option>
-                    <option value="3" selected>⭐⭐⭐ 3 Estrelas</option>
-                    <option value="4">⭐⭐⭐⭐ 4 Estrelas</option>
-                    <option value="5">⭐⭐⭐⭐⭐ 5 Estrelas</option>
-                </select>
+                <label class="block text-retro-muted mb-0.5 font-medium">Habilidade do Piloto (0.5 a 5.0 ★)</label>
+                <input type="number" id="driver-stars" step="0.5" min="0.5" max="5.0" value="3.0" class="w-full bg-retro-surface border border-retro-border rounded-lg p-1.5 text-retro-text focus:outline-none focus:border-retro-green">
             </div>
-            <div class="flex justify-end gap-2 pt-2">
-                <button onclick="closeModals()" class="px-3 py-1.5 bg-zinc-800 text-zinc-300 rounded-lg font-semibold">Cancelar</button>
-                <button onclick="saveDriver()" class="px-3 py-1.5 bg-gporange text-black rounded-lg font-bold">Salvar</button>
+            <div class="flex justify-end gap-2 pt-2 border-t border-retro-borderLight">
+                <button onclick="closeModals()" class="px-3.5 py-1.5 bg-retro-bg text-retro-text rounded-lg font-medium border border-retro-border">Cancelar</button>
+                <button onclick="saveDriver()" class="px-3.5 py-1.5 bg-retro-green text-white rounded-lg font-medium shadow-sm">Salvar</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-race" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-gpcard border border-zinc-700 rounded-xl p-4 w-full max-w-md space-y-3 text-xs">
-            <h3 id="modal-race-title" class="text-sm font-bold text-white">Adicionar Grande Prêmio</h3>
+    <div id="modal-race" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-retro-surface border border-retro-border rounded-xl p-4 w-full max-w-sm space-y-3 shadow-xl">
+            <h3 id="modal-race-title" class="font-bold text-retro-text border-b border-retro-border pb-1.5 text-xs uppercase tracking-tight">Adicionar Grande Prêmio</h3>
             <input type="hidden" id="edit-race-id">
             <div>
-                <label class="block text-zinc-400 mb-1">Nome do GP</label>
-                <input type="text" id="race-name" placeholder="GP do Brasil" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
+                <label class="block text-retro-muted mb-0.5 font-medium">Nome do GP</label>
+                <input type="text" id="race-name" placeholder="GP da Itália" class="w-full bg-retro-surface border border-retro-border rounded-lg p-1.5 text-retro-text focus:outline-none focus:border-retro-green">
             </div>
             <div>
-                <label class="block text-zinc-400 mb-1">Circuito / Pista</label>
-                <input type="text" id="race-track" placeholder="Interlagos" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
+                <label class="block text-retro-muted mb-0.5 font-medium">Circuito / Autódromo</label>
+                <input type="text" id="race-track" placeholder="Monza" class="w-full bg-retro-surface border border-retro-border rounded-lg p-1.5 text-retro-text focus:outline-none focus:border-retro-green">
             </div>
             <div>
-                <label class="block text-zinc-400 mb-1">Bandeira / País (Emoji)</label>
-                <input type="text" id="race-flag" placeholder="🇧🇷" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-gporange">
+                <label class="block text-retro-muted mb-0.5 font-medium">Código do País (ex: it, br, gb, de, fr, us)</label>
+                <input type="text" id="race-flag" placeholder="it" class="w-full bg-retro-surface border border-retro-border rounded-lg p-1.5 text-retro-text focus:outline-none focus:border-retro-green">
             </div>
-            <div class="flex justify-end gap-2 pt-2">
-                <button onclick="closeModals()" class="px-3 py-1.5 bg-zinc-800 text-zinc-300 rounded-lg font-semibold">Cancelar</button>
-                <button onclick="saveRace()" class="px-3 py-1.5 bg-gporange text-black rounded-lg font-bold">Salvar</button>
+            <div class="flex justify-end gap-2 pt-2 border-t border-retro-borderLight">
+                <button onclick="closeModals()" class="px-3.5 py-1.5 bg-retro-bg text-retro-text rounded-lg font-medium border border-retro-border">Cancelar</button>
+                <button onclick="saveRace()" class="px-3.5 py-1.5 bg-retro-green text-white rounded-lg font-medium shadow-sm">Salvar</button>
             </div>
         </div>
     </div>
 
-    <div id="toast" class="fixed bottom-4 right-4 bg-zinc-900 border border-gporange text-white px-3 py-2 rounded-lg shadow-2xl opacity-0 pointer-events-none transition-opacity duration-300 flex items-center space-x-2 z-50 text-xs">
-        <i data-lucide="info" class="text-gporange w-4 h-4"></i>
+    <div id="toast" class="fixed bottom-4 right-4 bg-retro-surface border border-retro-green text-retro-text px-3.5 py-2.5 rounded-lg shadow-xl opacity-0 pointer-events-none transition-opacity duration-300 flex items-center gap-2 z-50">
+        <i data-lucide="info" class="text-retro-green w-4 h-4"></i>
         <span id="toast-message">Mensagem</span>
     </div>
 
     <script>
+        const DEFAULT_POINTS_SYSTEM = [9, 6, 4, 3, 2, 1, 0, 0, 0, 0];
+
         let state = {
-            year: 1955,
+            year: 1965,
             mortalityRate: 4.0,
             dnfRate: 15.0,
+            pointsSystem: [...DEFAULT_POINTS_SYSTEM],
             teams: [],
             drivers: [],
             races: [],
-            selectedRaceId: "r1"
+            selectedRaceId: null
         };
 
-        const POINTS_MAP = [8, 6, 4, 3, 2];
-        const DNF_REASONS = ["Falha no Motor", "Problema Elétrico", "Suspensão Quebrada", "Vazamento de Óleo", "Freios", "Caixa de Câmbio", "Rodou sozinho"];
+        const DNF_REASONS = [
+            "Quebra de Motor", "Caixa de Câmbio Severamente Danificada", "Suspensão Partida", 
+            "Vazamento de Óleo Espesso", "Superaquecimento", "Eixo de Transmissão", 
+            "Esgotamento de Freios", "Despistagem em Superfície Escorregadia"
+        ];
+
+        const TEAM_EVENTS = [
+            { type: 'advantage', name: "Acerto Excepcional", text: "afinação precisa dos carburadores", boost: 35 },
+            { type: 'advantage', name: "Novo Chassi", text: "novo chassi tubular mais leve e ágil", boost: 28 },
+            { type: 'disadvantage', name: "Falha no Box", text: "problemas graves na troca manual no boxe", boost: -30 },
+            { type: 'disadvantage', name: "Problema Elétrico", text: "ignição falha e perda de potência", boost: -25 }
+        ];
+
+        function getFlagImg(countryCode, extraClass = 'mr-1.5') {
+            if (!countryCode) return `<span class="inline-block w-5 h-3.5 bg-retro-border rounded-sm ${extraClass}"></span>`;
+            const code = countryCode.trim().toLowerCase();
+            return `<img src="https://flagcdn.com/w20/${code}.png" class="flag-img ${extraClass}" alt="${code}" title="${code.toUpperCase()}" onerror="this.onerror=null; this.src='https://flagcdn.com/w20/un.png';">`;
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
             loadFromLocalStorage();
@@ -389,24 +595,50 @@
 
         function renderAll() {
             document.getElementById('header-year').innerText = state.year;
+            updateScoringRuleText();
             renderHeaderProgress();
             renderStandings();
+            renderMatrices();
             renderRaceList();
             renderRaceDetail();
             renderTeams();
         }
 
+        function updateScoringRuleText() {
+            const scoringPositions = state.pointsSystem.reduce((count, p) => p > 0 ? count + 1 : count, 0);
+            const labelEl = document.getElementById('scoring-rule-drivers');
+            if (labelEl) {
+                labelEl.innerText = scoringPositions > 0 ? `Top ${scoringPositions} pontuam` : "Ninguém pontua";
+            }
+        }
+
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('bg-gporange', 'text-black');
-                btn.classList.add('text-zinc-400');
+                btn.classList.remove('bg-retro-green', 'text-white', 'shadow-sm');
+                btn.classList.add('text-retro-muted');
             });
 
             document.getElementById(`view-${tabId}`).classList.remove('hidden');
             const activeBtn = document.getElementById(`tab-${tabId}`);
-            activeBtn.classList.add('bg-gporange', 'text-black');
-            activeBtn.classList.remove('text-zinc-400');
+            if (activeBtn) {
+                activeBtn.classList.add('bg-retro-green', 'text-white', 'shadow-sm');
+                activeBtn.classList.remove('text-retro-muted');
+            }
+        }
+
+        function getStarIcons(stars) {
+            const val = parseFloat(stars) || 0;
+            const fullStars = Math.floor(val);
+            const hasHalf = (val % 1) >= 0.5;
+            const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
+
+            let html = '';
+            for (let i = 0; i < fullStars; i++) html += '<i data-lucide="star" class="w-3 h-3 fill-amber-500 text-amber-600 inline"></i>';
+            if (hasHalf) html += '<i data-lucide="star-half" class="w-3 h-3 fill-amber-500 text-amber-600 inline"></i>';
+            for (let i = 0; i < emptyStars; i++) html += '<i data-lucide="star" class="w-3 h-3 text-retro-border inline"></i>';
+
+            return `<span class="inline-flex items-center gap-0.5" title="${val.toFixed(1)} estrelas">${html}</span>`;
         }
 
         function renderHeaderProgress() {
@@ -415,22 +647,55 @@
 
             const nextRace = state.races.find(r => !r.completed);
             if (nextRace) {
-                document.getElementById('next-gp-name').innerText = `${nextRace.flag} ${nextRace.name}`;
+                document.getElementById('next-gp-name').innerHTML = `${getFlagImg(nextRace.flag)} ${nextRace.name}`;
                 document.getElementById('btn-sim-next').disabled = false;
                 document.getElementById('btn-sim-next').classList.remove('opacity-50', 'cursor-not-allowed');
             } else {
-                document.getElementById('next-gp-name').innerText = "Temporada Concluída!";
+                document.getElementById('next-gp-name').innerText = state.races.length > 0 ? "Temporada Concluída" : "Nenhum GP cadastrado";
                 document.getElementById('btn-sim-next').disabled = true;
                 document.getElementById('btn-sim-next').classList.add('opacity-50', 'cursor-not-allowed');
             }
         }
 
+        function getScoredPoints(pos) {
+            if (pos >= 1 && pos <= state.pointsSystem.length) {
+                return state.pointsSystem[pos - 1] || 0;
+            }
+            return 0;
+        }
+
+        function calculateTotals() {
+            let driverTotals = {};
+            state.drivers.forEach(d => {
+                driverTotals[d.id] = 0;
+            });
+
+            let teamTotals = {};
+            state.teams.forEach(t => {
+                teamTotals[t.id] = 0;
+            });
+
+            state.races.filter(r => r.completed).forEach(race => {
+                race.results.forEach((res) => {
+                    if (res.status === 'FINISHED' && res.position > 0) {
+                        const pts = getScoredPoints(res.position);
+                        if (driverTotals[res.driverId] !== undefined) {
+                            driverTotals[res.driverId] += pts;
+                        }
+                        if (res.teamId && teamTotals[res.teamId] !== undefined) {
+                            teamTotals[res.teamId] += pts;
+                        }
+                    }
+                });
+            });
+
+            return { driverTotals, teamTotals };
+        }
+
         function renderStandings() {
             let driverStats = {};
             state.drivers.forEach(d => {
-                if (d.teamId) {
-                    driverStats[d.id] = { driver: d, points: 0, wins: 0 };
-                }
+                driverStats[d.id] = { driver: d, points: 0, wins: 0 };
             });
 
             let teamStats = {};
@@ -439,16 +704,16 @@
             });
 
             state.races.filter(r => r.completed).forEach(race => {
-                race.results.forEach((res, index) => {
-                    if (res.status === 'FINISHED') {
-                        const pts = index < 5 ? POINTS_MAP[index] : 0;
+                race.results.forEach((res) => {
+                    if (res.status === 'FINISHED' && res.position > 0) {
+                        const pts = getScoredPoints(res.position);
                         if (driverStats[res.driverId]) {
                             driverStats[res.driverId].points += pts;
-                            if (index === 0) driverStats[res.driverId].wins += 1;
+                            if (res.position === 1) driverStats[res.driverId].wins += 1;
                         }
                         if (res.teamId && teamStats[res.teamId]) {
                             teamStats[res.teamId].points += pts;
-                            if (index === 0) teamStats[res.teamId].wins += 1;
+                            if (res.position === 1) teamStats[res.teamId].wins += 1;
                         }
                     }
                 });
@@ -457,44 +722,282 @@
             const sortedDrivers = Object.values(driverStats).sort((a, b) => b.points - a.points || b.wins - a.wins);
 
             const driverBody = document.getElementById('driver-standings-body');
-            driverBody.innerHTML = sortedDrivers.map((item, idx) => {
-                const d = item.driver;
-                const team = state.teams.find(t => t.id === d.teamId);
-                const isDead = d.status === 'DEAD';
-                return `
-                    <tr class="${isDead ? 'opacity-50 bg-red-950/20' : 'hover:bg-zinc-800/40'}">
-                        <td class="p-1.5 font-bold ${idx < 3 ? 'text-gporange' : 'text-zinc-400'}">${idx + 1}º</td>
-                        <td class="p-1.5 font-semibold text-white">
-                            <span class="mr-1">${d.flag}</span> ${d.name}
-                            ${isDead ? '<span class="ml-1 text-[9px] bg-red-800 text-white px-1 py-0.2 rounded uppercase font-bold">Falecido</span>' : ''}
-                        </td>
-                        <td class="p-1.5 text-zinc-400">${team ? `${team.flag} ${team.name}` : 'Sem Equipe'}</td>
-                        <td class="p-1.5 font-bold text-center text-gporange">${item.points}</td>
-                        <td class="p-1.5 text-center text-zinc-400">${item.wins}</td>
-                    </tr>
-                `;
-            }).join('');
+            if (sortedDrivers.length === 0) {
+                driverBody.innerHTML = '<tr><td colspan="5" class="py-3 text-center text-retro-muted italic">Nenhum piloto cadastrado.</td></tr>';
+            } else {
+                driverBody.innerHTML = sortedDrivers.map((item, idx) => {
+                    const d = item.driver;
+                    const team = state.teams.find(t => t.id === d.teamId);
+                    const isDead = d.status === 'DEAD';
+                    return `
+                        <tr class="${isDead ? 'bg-red-50/50 text-retro-muted' : 'hover:bg-retro-bg/60'}">
+                            <td class="py-1.5 px-1.5 font-bold ${idx < 3 ? 'text-retro-green' : 'text-retro-muted'}">${idx + 1}º</td>
+                            <td class="py-1.5 px-1.5 font-semibold text-retro-text whitespace-nowrap">
+                                <div class="inline-flex items-center gap-1.5">
+                                    ${getFlagImg(d.flag)}
+                                    <span>${d.name}</span>
+                                    ${isDead ? '<span class="dead-text">(Falecido)</span>' : ''}
+                                </div>
+                            </td>
+                            <td class="py-1.5 px-1.5 text-retro-muted whitespace-nowrap">${team ? `${getFlagImg(team.flag)} ${team.name}` : 'Sem Equipe'}</td>
+                            <td class="py-1.5 px-1.5 font-bold text-center text-retro-green">${item.points}</td>
+                            <td class="py-1.5 px-1.5 text-center text-retro-muted">${item.wins}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
 
             const sortedTeams = Object.values(teamStats).sort((a, b) => b.points - a.points || b.wins - a.wins);
 
             const teamBody = document.getElementById('team-standings-body');
-            teamBody.innerHTML = sortedTeams.map((item, idx) => {
-                const t = item.team;
-                return `
-                    <tr class="hover:bg-zinc-800/40">
-                        <td class="p-1.5 font-bold ${idx < 3 ? 'text-gporange' : 'text-zinc-400'}">${idx + 1}º</td>
-                        <td class="p-1.5 font-semibold text-white"><span class="mr-1">${t.flag}</span> ${t.name}</td>
-                        <td class="p-1.5 font-bold text-center text-gporange">${item.points}</td>
-                        <td class="p-1.5 text-center text-zinc-400">${item.wins}</td>
-                    </tr>
-                `;
-            }).join('');
+            if (sortedTeams.length === 0) {
+                teamBody.innerHTML = '<tr><td colspan="4" class="py-3 text-center text-retro-muted italic">Nenhuma equipe cadastrada.</td></tr>';
+            } else {
+                teamBody.innerHTML = sortedTeams.map((item, idx) => {
+                    const t = item.team;
+                    return `
+                        <tr class="hover:bg-retro-bg/60">
+                            <td class="py-1.5 px-1.5 font-bold ${idx < 3 ? 'text-retro-green' : 'text-retro-muted'}">${idx + 1}º</td>
+                            <td class="py-1.5 px-1.5 font-semibold text-retro-text whitespace-nowrap">${getFlagImg(t.flag)} ${t.name}</td>
+                            <td class="py-1.5 px-1.5 font-bold text-center text-retro-green">${item.points}</td>
+                            <td class="py-1.5 px-1.5 text-center text-retro-muted">${item.wins}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        function renderMatrices() {
+            const dHeader = document.getElementById('matrix-driver-header');
+            const dBody = document.getElementById('matrix-driver-body');
+            const tHeader = document.getElementById('matrix-team-header');
+            const tBody = document.getElementById('matrix-team-body');
+
+            const races = state.races;
+            const { driverTotals, teamTotals } = calculateTotals();
+
+            let raceColsHtml = races.map(r => `
+                <th class="py-1 px-0 text-center w-8 border-l border-retro-borderLight" title="${r.name}">
+                    <div class="flex items-center justify-center w-full">
+                        ${getFlagImg(r.flag, '')}
+                    </div>
+                </th>
+            `).join('');
+
+            dHeader.innerHTML = `
+                <th class="py-1 px-1.5 whitespace-nowrap">Piloto</th>
+                <th class="py-1 px-1.5 whitespace-nowrap">Equipe</th>
+                ${raceColsHtml}
+                <th class="py-1 px-1.5 text-center border-l border-retro-border font-bold text-retro-green w-9">Pts</th>
+            `;
+
+            if (state.drivers.length === 0) {
+                dBody.innerHTML = '<tr><td colspan="' + (3 + races.length) + '" class="py-3 text-center text-retro-muted italic">Cadastre pilotos para exibir a matriz.</td></tr>';
+            } else {
+                const sortedDrivers = [...state.drivers].sort((a, b) => {
+                    const ptsA = driverTotals[a.id] || 0;
+                    const ptsB = driverTotals[b.id] || 0;
+                    return ptsB - ptsA;
+                });
+
+                dBody.innerHTML = sortedDrivers.map(d => {
+                    const team = state.teams.find(t => t.id === d.teamId);
+                    const totalPts = driverTotals[d.id] || 0;
+                    const isDead = d.status === 'DEAD';
+                    
+                    let cellsHtml = races.map(r => {
+                        if (!r.completed) return `<td class="!p-0 border border-retro-borderLight text-center text-retro-muted bg-retro-bg/30 align-middle">-</td>`;
+                        const res = r.results.find(x => x.driverId === d.id);
+                        if (!res) return `<td class="!p-0 border border-retro-borderLight text-center text-retro-muted bg-retro-bg/30 align-middle">-</td>`;
+                        
+                        return `<td class="!p-0 border border-retro-borderLight text-center align-middle h-full">${getSquareBadge(res)}</td>`;
+                    }).join('');
+
+                    return `
+                        <tr class="${isDead ? 'bg-red-50/40 text-retro-muted' : 'hover:bg-retro-bg/60'}">
+                            <td class="py-1 px-1.5 font-semibold text-retro-text whitespace-nowrap align-middle">
+                                <div class="inline-flex items-center gap-1">
+                                    ${getFlagImg(d.flag)}
+                                    <span>${d.name}</span>
+                                    ${isDead ? '<span class="dead-text">(FTL)</span>' : ''}
+                                </div>
+                            </td>
+                            <td class="py-1 px-1.5 text-retro-muted whitespace-nowrap align-middle">${team ? `${getFlagImg(team.flag)} ${team.name}` : '-'}</td>
+                            ${cellsHtml}
+                            <td class="py-1 px-1.5 text-center font-bold border-l border-retro-border text-retro-green align-middle">${totalPts}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            tHeader.innerHTML = `
+                <th class="py-1 px-1.5 whitespace-nowrap">Equipe</th>
+                ${raceColsHtml}
+                <th class="py-1 px-1.5 text-center border-l border-retro-border font-bold text-retro-green w-9">Pts</th>
+            `;
+
+            if (state.teams.length === 0) {
+                tBody.innerHTML = '<tr><td colspan="' + (2 + races.length) + '" class="py-3 text-center text-retro-muted italic">Cadastre equipes para exibir a matriz.</td></tr>';
+            } else {
+                const sortedTeams = [...state.teams].sort((a, b) => {
+                    const ptsA = teamTotals[a.id] || 0;
+                    const ptsB = teamTotals[b.id] || 0;
+                    return ptsB - ptsA;
+                });
+
+                tBody.innerHTML = sortedTeams.map(t => {
+                    const totalPts = teamTotals[t.id] || 0;
+                    
+                    let cellsHtml = races.map(r => {
+                        if (!r.completed) return `<td class="!p-0 border border-retro-borderLight text-center text-retro-muted bg-retro-bg/30 align-middle">-</td>`;
+                        const teamResults = r.results.filter(x => x.teamId === t.id);
+                        if (teamResults.length === 0) return `<td class="!p-0 border border-retro-borderLight text-center text-retro-muted bg-retro-bg/30 align-middle">-</td>`;
+                        
+                        let gridColsClass = teamResults.length > 1 ? 'grid grid-cols-2' : 'flex';
+                        let badges = teamResults.map(res => getSquareBadge(res)).join('');
+                        return `<td class="!p-0 border border-retro-borderLight text-center align-middle h-full"><div class="${gridColsClass} items-center justify-center w-full h-full min-h-[24px]">${badges}</div></td>`;
+                    }).join('');
+
+                    return `
+                        <tr class="hover:bg-retro-bg/60">
+                            <td class="py-1 px-1.5 font-semibold text-retro-text whitespace-nowrap align-middle">${getFlagImg(t.flag)} ${t.name}</td>
+                            ${cellsHtml}
+                            <td class="py-1 px-1.5 text-center font-bold border-l border-retro-border text-retro-green align-middle">${totalPts}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        function renderMatrices() {
+            const dHeader = document.getElementById('matrix-driver-header');
+            const dBody = document.getElementById('matrix-driver-body');
+            const tHeader = document.getElementById('matrix-team-header');
+            const tBody = document.getElementById('matrix-team-body');
+
+            const races = state.races;
+            const { driverTotals, teamTotals } = calculateTotals();
+
+            let raceColsHtml = races.map(r => `
+                <th class="py-1 px-0 text-center w-7 border-l border-retro-borderLight" title="${r.name}">
+                    <div class="flex items-center justify-center w-full">
+                        ${getFlagImg(r.flag, '')}
+                    </div>
+                </th>
+            `).join('');
+
+            dHeader.innerHTML = `
+                <th class="py-1 px-1.5 whitespace-nowrap">Piloto</th>
+                <th class="py-1 px-1.5 whitespace-nowrap">Equipe</th>
+                ${raceColsHtml}
+                <th class="py-1 px-1.5 text-center border-l border-retro-border font-bold text-retro-green w-9">Pts</th>
+            `;
+
+            if (state.drivers.length === 0) {
+                dBody.innerHTML = '<tr><td colspan="' + (3 + races.length) + '" class="py-3 text-center text-retro-muted italic">Cadastre pilotos para exibir a matriz.</td></tr>';
+            } else {
+                const sortedDrivers = [...state.drivers].sort((a, b) => {
+                    const ptsA = driverTotals[a.id] || 0;
+                    const ptsB = driverTotals[b.id] || 0;
+                    return ptsB - ptsA;
+                });
+
+                dBody.innerHTML = sortedDrivers.map(d => {
+                    const team = state.teams.find(t => t.id === d.teamId);
+                    const totalPts = driverTotals[d.id] || 0;
+                    const isDead = d.status === 'DEAD';
+                    
+                    let cellsHtml = races.map(r => {
+                        if (!r.completed) return `<td class="!p-0 border border-retro-borderLight text-center text-retro-muted bg-retro-bg/30">-</td>`;
+                        const res = r.results.find(x => x.driverId === d.id);
+                        if (!res) return `<td class="!p-0 border border-retro-borderLight text-center text-retro-muted bg-retro-bg/30">-</td>`;
+                        
+                        return `<td class="!p-0 border border-retro-borderLight text-center">${getSquareBadge(res)}</td>`;
+                    }).join('');
+
+                    return `
+                        <tr class="${isDead ? 'bg-red-50/40 text-retro-muted' : 'hover:bg-retro-bg/60'}">
+                            <td class="py-1 px-1.5 font-semibold text-retro-text whitespace-nowrap">
+                                <div class="inline-flex items-center gap-1.5">
+                                    ${getFlagImg(d.flag)}
+                                    <span>${d.name}</span>
+                                    ${isDead ? '<span class="dead-text">(FTL)</span>' : ''}
+                                </div>
+                            </td>
+                            <td class="py-1 px-1.5 text-retro-muted whitespace-nowrap">${team ? `${getFlagImg(team.flag)} ${team.name}` : '-'}</td>
+                            ${cellsHtml}
+                            <td class="py-1 px-1.5 text-center font-bold border-l border-retro-border text-retro-green">${totalPts}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            tHeader.innerHTML = `
+                <th class="py-1 px-1.5 whitespace-nowrap">Equipe</th>
+                ${raceColsHtml}
+                <th class="py-1 px-1.5 text-center border-l border-retro-border font-bold text-retro-green w-9">Pts</th>
+            `;
+
+            if (state.teams.length === 0) {
+                tBody.innerHTML = '<tr><td colspan="' + (2 + races.length) + '" class="py-3 text-center text-retro-muted italic">Cadastre equipes para exibir a matriz.</td></tr>';
+            } else {
+                const sortedTeams = [...state.teams].sort((a, b) => {
+                    const ptsA = teamTotals[a.id] || 0;
+                    const ptsB = teamTotals[b.id] || 0;
+                    return ptsB - ptsA;
+                });
+
+                tBody.innerHTML = sortedTeams.map(t => {
+                    const totalPts = teamTotals[t.id] || 0;
+                    
+                    let cellsHtml = races.map(r => {
+                        if (!r.completed) return `<td class="!p-0 border border-retro-borderLight text-center text-retro-muted bg-retro-bg/30">-</td>`;
+                        const teamResults = r.results.filter(x => x.teamId === t.id);
+                        if (teamResults.length === 0) return `<td class="!p-0 border border-retro-borderLight text-center text-retro-muted bg-retro-bg/30">-</td>`;
+                        
+                        let badges = teamResults.map(res => getSquareBadge(res)).join('');
+                        return `<td class="!p-0 border border-retro-borderLight text-center"><div class="flex items-center justify-center w-full h-full">${badges}</div></td>`;
+                    }).join('');
+
+                    return `
+                        <tr class="hover:bg-retro-bg/60">
+                            <td class="py-1 px-1.5 font-semibold text-retro-text whitespace-nowrap">${getFlagImg(t.flag)} ${t.name}</td>
+                            ${cellsHtml}
+                            <td class="py-1 px-1.5 text-center font-bold border-l border-retro-border text-retro-green">${totalPts}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        function getSquareBadge(res) {
+            if (res.status === 'FATAL_ACCIDENT') {
+                return `<span class="sq-box bg-red-100 text-red-900 font-bold" title="Acidente Fatal: ${res.reason || 'Tragédia no autódromo'}">FTL</span>`;
+            }
+            if (res.status === 'DNF') {
+                return `<span class="sq-box bg-stone-200 text-stone-800 font-bold" title="DNF: ${res.reason}">R</span>`;
+            }
+            if (res.position === 1) {
+                return `<span class="sq-box bg-amber-100 text-amber-900 font-bold">1</span>`;
+            }
+            if (res.position === 2) {
+                return `<span class="sq-box bg-slate-100 text-slate-800 font-bold">2</span>`;
+            }
+            if (res.position === 3) {
+                return `<span class="sq-box bg-orange-100 text-orange-900 font-bold">3</span>`;
+            }
+            
+            const pts = getScoredPoints(res.position);
+            if (pts > 0) {
+                return `<span class="sq-box bg-emerald-100 text-emerald-900 font-semibold" title="${res.position}º lugar (+${pts} pts)">${res.position}</span>`;
+            }
+            return `<span class="sq-box bg-retro-surface text-retro-muted font-normal">${res.position}</span>`;
         }
 
         function simulateNextRace() {
             const race = state.races.find(r => !r.completed);
             if (!race) {
-                showToast("Todas as corridas do campeonato já foram realizadas!");
+                showToast("Todas as corridas da temporada já foram concluídas!");
                 return;
             }
             executeRace(race);
@@ -513,18 +1016,44 @@
             state.selectedRaceId = uncompleted[uncompleted.length - 1].id;
             saveToLocalStorage();
             renderAll();
-            showToast("Temporada inteira simulada com sucesso!");
+            showToast("Temporada simulada com sucesso!");
         }
 
         function executeRace(race) {
             let activeDrivers = state.drivers.filter(d => d.teamId && d.status === 'ALIVE');
+            let raceEvents = [];
+            let categorizedEvents = {
+                advantages: [],
+                disadvantages: [],
+                fatalities: []
+            };
+
+            let teamEventModifiers = {};
+            state.teams.forEach(t => {
+                if (Math.random() < 0.30) {
+                    const evt = TEAM_EVENTS[Math.floor(Math.random() * TEAM_EVENTS.length)];
+                    teamEventModifiers[t.id] = evt.boost;
+                    
+                    if (evt.type === 'advantage') {
+                        categorizedEvents.advantages.push(`<b>${t.name}</b>: ${evt.text}`);
+                    } else {
+                        categorizedEvents.disadvantages.push(`<b>${t.name}</b>: ${evt.text}`);
+                    }
+                } else {
+                    teamEventModifiers[t.id] = 0;
+                }
+            });
 
             let racePerformances = activeDrivers.map(driver => {
                 const team = state.teams.find(t => t.id === driver.teamId);
-                const carStars = team ? (team.stars || 3) : 3;
-                const driverStars = driver.stars || 3;
-                // Aumentada a volatilidade: multiplicadores ajustados + Math.random até 80 (maior aleatoriedade)
-                const score = (driverStars * 12) + (carStars * 10) + (Math.random() * 80);
+                const carStars = team ? (parseFloat(team.stars) || 3.0) : 3.0;
+                const driverStars = parseFloat(driver.stars) || 3.0;
+                
+                const eventModifier = team ? (teamEventModifiers[team.id] || 0) : 0;
+                const baseSkill = (driverStars * 10) + (carStars * 8);
+                const randomVariance = (Math.random() * 90) - 30;
+                
+                const score = baseSkill + eventModifier + randomVariance;
                 return {
                     driver: driver,
                     score: score
@@ -551,6 +1080,7 @@
                         reason: 'Acidente Fatal',
                         position: null
                     });
+                    categorizedEvents.fatalities.push(`<b>${item.driver.name}</b>: Colisão fatal durante a disputa`);
                 } else if (isDNF) {
                     const reason = DNF_REASONS[Math.floor(Math.random() * DNF_REASONS.length)];
                     raceResults.push({
@@ -583,15 +1113,17 @@
 
             race.results = [...finished, ...dnfs, ...deads];
             race.fatalities = raceFatalities.map(d => ({ name: d.name, flag: d.flag }));
+            race.categorizedEvents = categorizedEvents;
             race.completed = true;
         }
 
         function resetSeason() {
-            if (confirm("Deseja realmente resetar todos os resultados da temporada? O status dos pilotos mortos voltará ao normal.")) {
+            if (confirm("Deseja resetar os resultados de todas as corridas? Os pilotos falecidos voltarão ao grid.")) {
                 state.races.forEach(r => {
                     r.completed = false;
                     r.results = [];
                     r.fatalities = [];
+                    r.categorizedEvents = { advantages: [], disadvantages: [], fatalities: [] };
                 });
                 state.drivers.forEach(d => d.status = 'ALIVE');
                 state.selectedRaceId = state.races.length > 0 ? state.races[0].id : null;
@@ -604,28 +1136,51 @@
         function renderRaceList() {
             const listEl = document.getElementById('race-list');
             if (state.races.length === 0) {
-                listEl.innerHTML = '<p class="text-xs text-zinc-500 italic p-1.5">Nenhum GP cadastrado.</p>';
+                listEl.innerHTML = '<p class="text-retro-muted italic text-center py-2">Nenhum GP cadastrado.</p>';
                 return;
             }
-            listEl.innerHTML = state.races.map(r => {
+            listEl.innerHTML = state.races.map((r, idx) => {
                 const isSelected = r.id === state.selectedRaceId;
                 return `
-                    <div onclick="selectRace('${r.id}')" class="p-2 rounded-lg border cursor-pointer transition-all flex items-center justify-between ${isSelected ? 'bg-gporange/20 border-gporange' : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700'}">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-base">${r.flag}</span>
+                    <div onclick="selectRace('${r.id}')" class="p-2 rounded-lg border cursor-pointer transition-all flex items-center justify-between ${isSelected ? 'bg-retro-bg border-retro-green font-semibold shadow-sm' : 'bg-retro-surface border-retro-borderLight hover:bg-retro-bg/50'}">
+                        <div class="flex items-center gap-2">
+                            ${getFlagImg(r.flag)}
                             <div>
-                                <h4 class="text-xs font-bold text-white leading-tight">${r.name}</h4>
-                                <p class="text-[10px] text-zinc-400">${r.track}</p>
+                                <h4 class="text-xs font-semibold text-retro-text leading-tight">${r.name}</h4>
+                                <p class="text-[10px] text-retro-muted">${r.track}</p>
                             </div>
                         </div>
-                        <div>
+                        <div class="flex items-center gap-1">
+                            <div class="flex flex-col gap-0.5 mr-1" onclick="event.stopPropagation()">
+                                <button onclick="moveRaceUp(${idx})" class="hover:text-retro-green ${idx === 0 ? 'opacity-30 cursor-default' : ''}"><i data-lucide="chevron-up" class="w-3 h-3"></i></button>
+                                <button onclick="moveRaceDown(${idx})" class="hover:text-retro-green ${idx === state.races.length - 1 ? 'opacity-30 cursor-default' : ''}"><i data-lucide="chevron-down" class="w-3 h-3"></i></button>
+                            </div>
                             ${r.completed ? 
-                                '<span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-1.5 py-0.5 rounded">Concluída</span>' : 
-                                '<span class="text-[9px] bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded">Pendente</span>'}
+                                '<span class="text-[9px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-1.5 py-0.2 rounded-full font-semibold">OK</span>' : 
+                                '<span class="text-[9px] bg-retro-bg text-retro-muted px-1.5 py-0.2 rounded-full border border-retro-border">Pend</span>'}
                         </div>
                     </div>
                 `;
             }).join('');
+            lucide.createIcons();
+        }
+
+        function moveRaceUp(index) {
+            if (index <= 0) return;
+            const temp = state.races[index];
+            state.races[index] = state.races[index - 1];
+            state.races[index - 1] = temp;
+            saveToLocalStorage();
+            renderAll();
+        }
+
+        function moveRaceDown(index) {
+            if (index >= state.races.length - 1) return;
+            const temp = state.races[index];
+            state.races[index] = state.races[index + 1];
+            state.races[index + 1] = temp;
+            saveToLocalStorage();
+            renderAll();
         }
 
         function selectRace(raceId) {
@@ -638,6 +1193,8 @@
             const race = state.races.find(r => r.id === state.selectedRaceId);
             const btnEdit = document.getElementById('btn-edit-race');
             const btnDelete = document.getElementById('btn-delete-race');
+            const eventsBox = document.getElementById('race-events-box');
+            const eventsCategorized = document.getElementById('race-events-categorized');
 
             if (!race) {
                 document.getElementById('race-detail-title').innerText = "Selecione uma corrida";
@@ -645,46 +1202,72 @@
                 document.getElementById('race-detail-status').className = "hidden";
                 btnEdit.classList.add('hidden');
                 btnDelete.classList.add('hidden');
-                document.getElementById('race-results-body').innerHTML = `<tr><td colspan="5" class="p-4 text-center text-zinc-500">Adicione ou selecione um GP.</td></tr>`;
+                eventsBox.classList.add('hidden');
+                document.getElementById('race-results-body').innerHTML = `<tr><td colspan="5" class="py-4 text-center text-retro-muted">Adicione ou selecione um GP.</td></tr>`;
                 return;
             }
 
             btnEdit.classList.remove('hidden');
             btnDelete.classList.remove('hidden');
 
-            document.getElementById('race-detail-title').innerText = `${race.flag} ${race.name}`;
-            document.getElementById('race-detail-subtitle').innerText = `Circuito: ${race.track}`;
+            document.getElementById('race-detail-title').innerHTML = `${getFlagImg(race.flag)} ${race.name}`;
+            document.getElementById('race-detail-subtitle').innerText = `Autódromo: ${race.track}`;
 
             const statusEl = document.getElementById('race-detail-status');
             statusEl.classList.remove('hidden');
             if (race.completed) {
-                statusEl.className = "px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-950 text-emerald-400 border border-emerald-800";
+                statusEl.className = "px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300";
                 statusEl.innerText = "GP Realizado";
             } else {
-                statusEl.className = "px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-zinc-800 text-zinc-400";
+                statusEl.className = "px-2 py-0.5 rounded-full text-[10px] font-semibold bg-retro-bg text-retro-muted border border-retro-border";
                 statusEl.innerText = "Não Realizado";
             }
 
-            const incidentBox = document.getElementById('race-incidents-box');
-            if (race.completed && race.fatalities && race.fatalities.length > 0) {
-                incidentBox.classList.remove('hidden');
-                incidentBox.innerHTML = `
-                    <div class="flex items-center gap-1.5 font-bold mb-0.5 text-orange-400">
-                        <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>
-                        <span>Ocorrência Grave Registrada:</span>
-                    </div>
-                    <ul class="list-disc list-inside text-[11px] space-y-0.5">
-                        ${race.fatalities.map(f => `<li><span class="font-bold text-white">${f.flag} ${f.name}</span> sofreu um acidente fatal nesta etapa.</li>`).join('')}
-                    </ul>
-                `;
-                lucide.createIcons();
+            if (race.completed && race.categorizedEvents) {
+                const { advantages = [], disadvantages = [], fatalities = [] } = race.categorizedEvents;
+                const hasAnyEvent = advantages.length > 0 || disadvantages.length > 0 || fatalities.length > 0;
+
+                if (hasAnyEvent) {
+                    eventsBox.classList.remove('hidden');
+                    eventsCategorized.innerHTML = `
+                        <div class="bg-emerald-50/60 p-2 rounded-lg border border-emerald-200">
+                            <span class="block text-[10px] font-bold text-emerald-900 uppercase tracking-wide mb-1 flex items-center gap-1">
+                                <i data-lucide="trending-up" class="w-3 h-3 text-emerald-700"></i> Vantagens & Destaques
+                            </span>
+                            <ul class="space-y-0.5 text-emerald-950 text-[11px]">
+                                ${advantages.length > 0 ? advantages.map(a => `<li class="leading-tight">• ${a}</li>`).join('') : '<li class="italic text-retro-muted">Nenhum destaque</li>'}
+                            </ul>
+                        </div>
+
+                        <div class="bg-amber-50/60 p-2 rounded-lg border border-amber-200">
+                            <span class="block text-[10px] font-bold text-amber-900 uppercase tracking-wide mb-1 flex items-center gap-1">
+                                <i data-lucide="trending-down" class="w-3 h-3 text-amber-700"></i> Desvantagens & Falhas
+                            </span>
+                            <ul class="space-y-0.5 text-amber-950 text-[11px]">
+                                ${disadvantages.length > 0 ? disadvantages.map(d => `<li class="leading-tight">• ${d}</li>`).join('') : '<li class="italic text-retro-muted">Nenhuma falha registrada</li>'}
+                            </ul>
+                        </div>
+
+                        <div class="bg-red-50/60 p-2 rounded-lg border border-red-200">
+                            <span class="block text-[10px] font-bold text-retro-red uppercase tracking-wide mb-1 flex items-center gap-1">
+                                <i data-lucide="alert-triangle" class="w-3 h-3 text-retro-red"></i> Acidentes & Fatalidades
+                            </span>
+                            <ul class="space-y-0.5 text-red-950 text-[11px]">
+                                ${fatalities.length > 0 ? fatalities.map(f => `<li class="leading-tight text-retro-red font-medium">• ${f}</li>`).join('') : '<li class="italic text-retro-muted">Nenhum acidente fatal</li>'}
+                            </ul>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                } else {
+                    eventsBox.classList.add('hidden');
+                }
             } else {
-                incidentBox.classList.add('hidden');
+                eventsBox.classList.add('hidden');
             }
 
             const body = document.getElementById('race-results-body');
             if (!race.completed) {
-                body.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-zinc-500">Esta etapa ainda não foi simulada.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-retro-muted">Esta etapa ainda não foi simulada.</td></tr>`;
                 return;
             }
 
@@ -692,24 +1275,24 @@
                 const team = state.teams.find(t => t.id === res.teamId);
                 const isFatal = res.status === 'FATAL_ACCIDENT';
                 const isDNF = res.status === 'DNF';
-                const points = (res.position > 0 && res.position <= 5) ? POINTS_MAP[res.position - 1] : 0;
+                const points = (res.position > 0) ? getScoredPoints(res.position) : 0;
 
-                let statusBadge = '<span class="text-[9px] bg-zinc-800 text-zinc-300 px-1.5 py-0.5 rounded">FINALIZOU</span>';
+                let statusBadge = '<span class="text-[9px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full font-medium">Concluiu a prova</span>';
                 if (isFatal) {
-                    statusBadge = '<span class="text-[9px] font-bold bg-red-900 text-white px-1.5 py-0.5 rounded">ACIDENTE FATAL</span>';
+                    statusBadge = '<span class="dead-text font-bold uppercase">Acidente Fatal (FTL)</span>';
                 } else if (isDNF) {
-                    statusBadge = `<span class="text-[9px] font-bold bg-amber-950 text-amber-400 border border-amber-800/60 px-1.5 py-0.5 rounded">DNF (${res.reason})</span>`;
+                    statusBadge = `<span class="text-[9px] font-medium bg-stone-100 text-stone-800 border border-stone-300 px-2 py-0.5 rounded-full">DNF — ${res.reason}</span>`;
                 }
 
                 return `
-                    <tr class="${isFatal ? 'bg-red-950/20 text-red-400' : isDNF ? 'bg-amber-950/10 text-amber-200/70' : 'hover:bg-zinc-800/30'}">
-                        <td class="p-1.5 font-bold ${res.position === 1 ? 'text-gporange' : ''}">${(isFatal || isDNF) ? 'DNF' : `${res.position}º`}</td>
-                        <td class="p-1.5 font-semibold">
-                            <span>${res.driverFlag}</span> ${res.driverName}
+                    <tr class="${isFatal ? 'bg-red-50/60 text-retro-red' : isDNF ? 'bg-amber-50/40 text-retro-amber' : 'hover:bg-retro-bg/50'}">
+                        <td class="py-1 px-1.5 font-bold ${res.position === 1 ? 'text-retro-green' : ''}">${(isFatal || isDNF) ? 'DNF' : `${res.position}º`}</td>
+                        <td class="py-1 px-1.5 font-semibold whitespace-nowrap">
+                            ${getFlagImg(res.driverFlag)} ${res.driverName}
                         </td>
-                        <td class="p-1.5 text-zinc-400">${team ? `${team.flag} ${team.name}` : '-'}</td>
-                        <td class="p-1.5 text-center">${statusBadge}</td>
-                        <td class="p-1.5 text-center font-bold text-gporange">${points > 0 ? `+${points}` : '-'}</td>
+                        <td class="py-1 px-1.5 text-retro-muted whitespace-nowrap">${team ? `${getFlagImg(team.flag)} ${team.name}` : '-'}</td>
+                        <td class="py-1 px-1.5 text-center">${statusBadge}</td>
+                        <td class="py-1 px-1.5 text-center font-bold text-retro-green">${points > 0 ? `+${points}` : '-'}</td>
                     </tr>
                 `;
             }).join('');
@@ -727,7 +1310,7 @@
                 document.getElementById('modal-race-title').innerText = "Adicionar Grande Prêmio";
                 document.getElementById('race-name').value = '';
                 document.getElementById('race-track').value = '';
-                document.getElementById('race-flag').value = '🏁';
+                document.getElementById('race-flag').value = 'it';
             }
             document.getElementById('modal-race').classList.remove('hidden');
         }
@@ -736,7 +1319,7 @@
             const id = document.getElementById('edit-race-id').value;
             const name = document.getElementById('race-name').value.trim();
             const track = document.getElementById('race-track').value.trim();
-            const flag = document.getElementById('race-flag').value.trim() || '🏁';
+            const flag = document.getElementById('race-flag').value.trim() || 'un';
 
             if (!name || !track) return showToast("Preencha o nome e o circuito do GP!");
 
@@ -747,7 +1330,7 @@
                 r.flag = flag;
             } else {
                 const newId = 'r_' + Date.now();
-                state.races.push({ id: newId, name, track, flag, completed: false, results: [], fatalities: [] });
+                state.races.push({ id: newId, name, track, flag, completed: false, results: [], fatalities: [], categorizedEvents: { advantages: [], disadvantages: [], fatalities: [] } });
                 state.selectedRaceId = newId;
             }
             closeModals();
@@ -756,7 +1339,7 @@
         }
 
         function deleteRace(id) {
-            if (confirm("Deseja realmente excluir este GP?")) {
+            if (confirm("Deseja remover este GP do calendário?")) {
                 state.races = state.races.filter(r => r.id !== id);
                 state.selectedRaceId = state.races.length > 0 ? state.races[0].id : null;
                 saveToLocalStorage();
@@ -767,77 +1350,126 @@
 
         function renderTeams() {
             const grid = document.getElementById('teams-grid');
-            grid.innerHTML = state.teams.map(team => {
-                const teamDrivers = state.drivers.filter(d => d.teamId === team.id);
-                const starsCount = team.stars || 3;
-                const starsStr = '⭐'.repeat(starsCount);
-                return `
-                    <div class="bg-gpcard border border-zinc-800 rounded-xl p-3 shadow-md space-y-2">
-                        <div class="flex justify-between items-center border-b border-zinc-800 pb-1.5">
+            const activeDrivers = state.drivers.filter(d => d.status !== 'DEAD');
+            const aliveDriversInTeams = activeDrivers.filter(d => d.teamId);
+            const freeDrivers = activeDrivers.filter(d => !d.teamId);
+            const deadDrivers = state.drivers.filter(d => d.status === 'DEAD');
+
+            if (state.teams.length === 0) {
+                grid.innerHTML = '<div class="col-span-full py-4 text-center text-retro-muted italic">Nenhuma equipe cadastrada.</div>';
+            } else {
+                grid.innerHTML = state.teams.map(team => {
+                    const teamDrivers = aliveDriversInTeams.filter(d => d.teamId === team.id);
+                    const starsHtml = getStarIcons(team.stars || 3.0);
+                    return `
+                        <div class="bg-retro-surface border border-retro-border rounded-xl p-3 space-y-2 shadow-sm flex flex-col justify-between">
                             <div>
-                                <h3 class="font-bold text-white text-xs flex items-center gap-1.5">
-                                    <span>${team.flag}</span> ${team.name}
-                                </h3>
-                                <p class="text-[10px] text-gporange">Carro: ${starsStr}</p>
-                            </div>
-                            <div class="flex gap-1">
-                                <button onclick="openTeamModal('${team.id}')" class="text-zinc-400 hover:text-white p-1"><i data-lucide="edit-2" class="w-3 h-3"></i></button>
-                                <button onclick="deleteTeam('${team.id}')" class="text-zinc-500 hover:text-gporange p-1"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
-                            </div>
-                        </div>
-
-                        <div class="space-y-1">
-                            <span class="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Pilotos Titulares</span>
-                            ${teamDrivers.length === 0 ? '<p class="text-[11px] text-zinc-600 italic">Nenhum piloto alocado</p>' : ''}
-                            ${teamDrivers.map(d => {
-                                const dStars = '⭐'.repeat(d.stars || 3);
-                                return `
-                                    <div class="flex justify-between items-center bg-zinc-900/80 p-1.5 rounded border border-zinc-800/80 text-xs">
-                                        <div>
-                                            <span class="${d.status === 'DEAD' ? 'line-through text-red-500' : 'text-zinc-200'} font-semibold">
-                                                ${d.flag} ${d.name} ${d.status === 'DEAD' ? '(FALECIDO)' : ''}
-                                            </span>
-                                            <span class="block text-[9px] text-gporange">Habilidade: ${dStars}</span>
-                                        </div>
-                                        <div class="flex gap-0.5">
-                                            <button onclick="openDriverModal('${d.id}')" class="text-zinc-400 hover:text-white p-0.5"><i data-lucide="edit-2" class="w-3 h-3"></i></button>
-                                            <button onclick="deleteDriver('${d.id}')" class="text-zinc-500 hover:text-red-500 p-0.5"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                                <div class="flex justify-between items-center border-b border-retro-borderLight pb-1.5">
+                                    <div>
+                                        <h3 class="font-bold text-retro-text flex items-center gap-1.5 text-xs whitespace-nowrap">
+                                            ${getFlagImg(team.flag)} ${team.name}
+                                        </h3>
+                                        <div class="text-[10px] text-retro-muted flex items-center gap-1 mt-0.5">
+                                            <span>Carro:</span> ${starsHtml}
                                         </div>
                                     </div>
-                                `;
-                            }).join('')}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            const freeDrivers = state.drivers.filter(d => !d.teamId);
-            if (freeDrivers.length > 0) {
-                grid.innerHTML += `
-                    <div class="bg-zinc-900/40 border border-dashed border-zinc-800 rounded-xl p-3 space-y-2">
-                        <h3 class="font-bold text-zinc-400 text-xs">Sem Equipe / Reservas</h3>
-                        <div class="space-y-1">
-                            ${freeDrivers.map(d => {
-                                const dStars = '⭐'.repeat(d.stars || 3);
-                                return `
-                                    <div class="flex justify-between items-center bg-zinc-900 p-1.5 rounded text-xs">
-                                        <div>
-                                            <span class="text-zinc-300 font-semibold">${d.flag} ${d.name}</span>
-                                            <span class="block text-[9px] text-gporange">Habilidade: ${dStars}</span>
-                                        </div>
-                                        <div class="flex gap-0.5">
-                                            <button onclick="openDriverModal('${d.id}')" class="text-zinc-400 hover:text-white p-0.5"><i data-lucide="edit-2" class="w-3 h-3"></i></button>
-                                            <button onclick="deleteDriver('${d.id}')" class="text-zinc-500 hover:text-red-500 p-0.5"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
-                                        </div>
+                                    <div class="flex gap-1">
+                                        <button onclick="openTeamModal('${team.id}')" class="text-retro-muted hover:text-retro-text p-1"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
+                                        <button onclick="deleteTeam('${team.id}')" class="text-retro-muted hover:text-retro-red p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
                                     </div>
-                                `;
-                            }).join('')}
+                                </div>
+
+                                <div class="space-y-1.5 mt-2">
+                                    <span class="text-[9px] uppercase font-bold text-retro-muted tracking-wider">Pilotos Titulares</span>
+                                    ${teamDrivers.length === 0 ? '<p class="text-[10px] text-retro-muted italic py-1">Nenhum piloto contratado</p>' : ''}
+                                    ${teamDrivers.map(d => {
+                                        const dStarsHtml = getStarIcons(d.stars || 3.0);
+                                        return `
+                                            <div class="flex justify-between items-center bg-retro-bg p-1.5 rounded-lg border border-retro-borderLight text-xs">
+                                                <div>
+                                                    <span class="text-retro-text font-semibold whitespace-nowrap">${getFlagImg(d.flag)} ${d.name}</span>
+                                                    <div class="text-[9px] text-retro-muted flex items-center gap-0.5 mt-1.5">
+                                                        ${dStarsHtml}
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-center gap-1">
+                                                    <button onclick="openDriverModal('${d.id}')" class="text-retro-muted hover:text-retro-green p-1" title="Editar piloto / alterar equipe"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                }).join('');
+            }
+
+            const freeEl = document.getElementById('free-drivers-list');
+            document.getElementById('free-drivers-count').innerText = `${freeDrivers.length} Pilotos`;
+
+            if (freeDrivers.length === 0) {
+                freeEl.innerHTML = '<p class="text-[10px] text-retro-muted italic py-2 text-center">Nenhum piloto livre no mercado.</p>';
+            } else {
+                freeEl.innerHTML = freeDrivers.map(d => {
+                    const dStarsHtml = getStarIcons(d.stars || 3.0);
+                    return `
+                        <div class="flex justify-between items-center bg-retro-bg p-2 rounded-lg border border-retro-borderLight text-xs">
+                            <div class="flex items-center gap-2">
+                                ${getFlagImg(d.flag)}
+                                <div>
+                                    <span class="text-retro-text font-semibold">${d.name}</span>
+                                    <div class="text-[9px] text-retro-muted flex items-center gap-0.5">
+                                        ${dStarsHtml}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button onclick="openDriverModal('${d.id}')" class="text-retro-muted hover:text-retro-green p-1" title="Editar piloto / contratar para uma equipe"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
+                                <button onclick="deleteDriver('${d.id}')" class="text-retro-muted hover:text-retro-red p-1" title="Excluir"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            const deadEl = document.getElementById('dead-drivers-list');
+            document.getElementById('dead-drivers-count').innerText = `${deadDrivers.length} Pilotos`;
+
+            if (deadDrivers.length === 0) {
+                deadEl.innerHTML = '<p class="text-[10px] text-retro-muted italic py-2 text-center">Nenhuma fatalidade registrada nesta temporada.</p>';
+            } else {
+                deadEl.innerHTML = deadDrivers.map(d => {
+                    const team = state.teams.find(t => t.id === d.teamId);
+                    return `
+                        <div class="flex justify-between items-center bg-red-50/40 p-2 rounded-lg border border-red-200 text-xs">
+                            <div class="flex items-center gap-2">
+                                ${getFlagImg(d.flag)}
+                                <div>
+                                    <span class="text-retro-red font-semibold line-through">${d.name}</span>
+                                    <span class="block text-[9px] text-retro-muted">Última Equipe: ${team ? team.name : 'Sem Equipe'}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="dead-text uppercase font-bold">(Falecido)</span>
+                                <button onclick="deleteDriver('${d.id}')" class="text-retro-muted hover:text-retro-red p-1" title="Excluir registro"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
             }
 
             lucide.createIcons();
+        }
+
+        function dismissDriver(driverId) {
+            const d = state.drivers.find(dr => dr.id === driverId);
+            if (d) {
+                d.teamId = null;
+                saveToLocalStorage();
+                renderAll();
+                showToast(`${d.name} foi dispensado e está livre no mercado!`);
+            }
         }
 
         function openTeamModal(teamId = null) {
@@ -847,12 +1479,12 @@
                 document.getElementById('modal-team-title').innerText = "Editar Equipe";
                 document.getElementById('team-name').value = team.name;
                 document.getElementById('team-flag').value = team.flag;
-                document.getElementById('team-stars').value = team.stars || 3;
+                document.getElementById('team-stars').value = team.stars || 3.0;
             } else {
                 document.getElementById('modal-team-title').innerText = "Nova Equipe";
                 document.getElementById('team-name').value = '';
-                document.getElementById('team-flag').value = '🇬🇧';
-                document.getElementById('team-stars').value = 3;
+                document.getElementById('team-flag').value = 'gb';
+                document.getElementById('team-stars').value = 3.0;
             }
             document.getElementById('modal-team').classList.remove('hidden');
         }
@@ -861,8 +1493,8 @@
             document.getElementById('edit-driver-id').value = driverId || '';
 
             const select = document.getElementById('driver-team-select');
-            select.innerHTML = '<option value="">-- Sem Equipe --</option>' + 
-                state.teams.map(t => `<option value="${t.id}">${t.flag} ${t.name}</option>`).join('');
+            select.innerHTML = '<option value="">-- Sem Equipe (Livre no Mercado) --</option>' + 
+                state.teams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
 
             if (driverId) {
                 const d = state.drivers.find(dr => dr.id === driverId);
@@ -870,13 +1502,13 @@
                 document.getElementById('driver-name').value = d.name;
                 document.getElementById('driver-flag').value = d.flag;
                 select.value = d.teamId || '';
-                document.getElementById('driver-stars').value = d.stars || 3;
+                document.getElementById('driver-stars').value = d.stars || 3.0;
             } else {
                 document.getElementById('modal-driver-title').innerText = "Novo Piloto";
                 document.getElementById('driver-name').value = '';
-                document.getElementById('driver-flag').value = '🇬🇧';
+                document.getElementById('driver-flag').value = 'gb';
                 select.value = '';
-                document.getElementById('driver-stars').value = 3;
+                document.getElementById('driver-stars').value = 3.0;
             }
             document.getElementById('modal-driver').classList.remove('hidden');
         }
@@ -890,8 +1522,8 @@
         function saveTeam() {
             const id = document.getElementById('edit-team-id').value;
             const name = document.getElementById('team-name').value.trim();
-            const flag = document.getElementById('team-flag').value.trim() || '🏎️';
-            const stars = parseInt(document.getElementById('team-stars').value) || 3;
+            const flag = document.getElementById('team-flag').value.trim().toLowerCase() || 'un';
+            const stars = parseFloat(document.getElementById('team-stars').value) || 3.0;
 
             if (!name) return showToast("Informe o nome da equipe!");
 
@@ -911,9 +1543,9 @@
         function saveDriver() {
             const id = document.getElementById('edit-driver-id').value;
             const name = document.getElementById('driver-name').value.trim();
-            const flag = document.getElementById('driver-flag').value.trim() || '🏎️';
+            const flag = document.getElementById('driver-flag').value.trim().toLowerCase() || 'un';
             const teamId = document.getElementById('driver-team-select').value || null;
-            const stars = parseInt(document.getElementById('driver-stars').value) || 3;
+            const stars = parseFloat(document.getElementById('driver-stars').value) || 3.0;
 
             if (!name) return showToast("Informe o nome do piloto!");
 
@@ -932,7 +1564,7 @@
         }
 
         function deleteTeam(id) {
-            if (confirm("Remover esta equipe? Pilotos vinculados ficarão sem equipe.")) {
+            if (confirm("Remover esta equipe? Pilotos vinculados passarão a ficar livres no mercado.")) {
                 state.teams = state.teams.filter(t => t.id !== id);
                 state.drivers.forEach(d => { if (d.teamId === id) d.teamId = null; });
                 saveToLocalStorage();
@@ -942,7 +1574,7 @@
         }
 
         function deleteDriver(id) {
-            if (confirm("Deseja realmente remover este piloto?")) {
+            if (confirm("Deseja remover este piloto permanentemente?")) {
                 state.drivers = state.drivers.filter(d => d.id !== id);
                 saveToLocalStorage();
                 renderAll();
@@ -950,16 +1582,18 @@
             }
         }
 
-        function randomizeAllStars() {
-            state.teams.forEach(t => {
-                t.stars = Math.floor(Math.random() * 5) + 1;
-            });
-            state.drivers.forEach(d => {
-                d.stars = Math.floor(Math.random() * 5) + 1;
-            });
+        function randomizeStars(type = 'all') {
+            const getRandomStars = () => (Math.floor(Math.random() * 10) + 1) / 2.0;
+
+            if (type === 'teams' || type === 'all') {
+                state.teams.forEach(t => t.stars = getRandomStars());
+            }
+            if (type === 'drivers' || type === 'all') {
+                state.drivers.forEach(d => d.stars = getRandomStars());
+            }
             saveToLocalStorage();
             renderAll();
-            showToast("Estrelas de equipes e pilotos aleatorizadas com sucesso!");
+            showToast("Estrelas aleatorizadas!");
         }
 
         function initSettingsUI() {
@@ -975,18 +1609,52 @@
             dnfInput.value = state.dnfRate !== undefined ? state.dnfRate : 15.0;
             dnfVal.innerText = `${dnfInput.value}%`;
 
-            mortInput.addEventListener('input', (e) => {
-                mortVal.innerText = `${e.target.value}%`;
-            });
-            dnfInput.addEventListener('input', (e) => {
-                dnfVal.innerText = `${e.target.value}%`;
-            });
+            mortInput.oninput = (e) => { mortVal.innerText = `${e.target.value}%`; };
+            dnfInput.oninput = (e) => { dnfVal.innerText = `${e.target.value}%`; };
+
+            renderPointsEditor();
+        }
+
+        function renderPointsEditor() {
+            const grid = document.getElementById('points-editor-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            
+            if (!Array.isArray(state.pointsSystem) || state.pointsSystem.length < 10) {
+                state.pointsSystem = [...DEFAULT_POINTS_SYSTEM];
+            }
+
+            for (let i = 0; i < 10; i++) {
+                const val = state.pointsSystem[i] !== undefined ? state.pointsSystem[i] : 0;
+                grid.innerHTML += `
+                    <div>
+                        <label class="block text-[10px] text-retro-muted font-bold text-center mb-0.5">${i + 1}º</label>
+                        <input type="number" min="0" value="${val}" data-pos="${i}" class="pts-input w-full bg-retro-surface border border-retro-border rounded-lg p-1.5 text-center font-bold text-retro-green focus:outline-none focus:border-retro-green">
+                    </div>
+                `;
+            }
+        }
+
+        function resetPointsSystem() {
+            state.pointsSystem = [...DEFAULT_POINTS_SYSTEM];
+            renderPointsEditor();
+            showToast("Sistema de pontuação restaurado para o padrão!");
         }
 
         function saveSettings() {
-            state.year = parseInt(document.getElementById('setting-year').value) || 1951;
+            state.year = parseInt(document.getElementById('setting-year').value) || 1965;
             state.mortalityRate = parseFloat(document.getElementById('setting-mortality').value) || 4.0;
             state.dnfRate = parseFloat(document.getElementById('setting-dnf').value) || 15.0;
+
+            let pts = [];
+            document.querySelectorAll('.pts-input').forEach(inp => {
+                pts.push(Math.max(0, parseInt(inp.value) || 0));
+            });
+            
+            if (pts.length === 10) {
+                state.pointsSystem = pts;
+            }
+
             saveToLocalStorage();
             renderAll();
             showToast("Configurações salvas!");
@@ -1007,27 +1675,36 @@
             fileReader.onload = function(e) {
                 try {
                     const imported = JSON.parse(e.target.result);
-                    state = imported;
-                    saveToLocalStorage();
-                    initSettingsUI();
-                    renderAll();
-                    showToast("Dados importados com sucesso!");
+                    if (imported && typeof imported === 'object') {
+                        state = { ...state, ...imported };
+                        if (!Array.isArray(state.pointsSystem)) {
+                            state.pointsSystem = [...DEFAULT_POINTS_SYSTEM];
+                        }
+                        saveToLocalStorage();
+                        initSettingsUI();
+                        renderAll();
+                        showToast("Dados importados com sucesso!");
+                    }
                 } catch (err) {
-                    showToast("Erro ao importar arquivo JSON inválido!");
+                    showToast("Erro ao importar arquivo JSON!");
                 }
             };
             fileReader.readAsText(event.target.files[0]);
         }
 
         function saveToLocalStorage() {
-            localStorage.setItem('gp_sim_state', JSON.stringify(state));
+            localStorage.setItem('gp_sim_state_v4', JSON.stringify(state));
         }
 
         function loadFromLocalStorage() {
-            const saved = localStorage.getItem('gp_sim_state');
+            const saved = localStorage.getItem('gp_sim_state_v4');
             if (saved) {
                 try {
-                    state = JSON.parse(saved);
+                    const parsed = JSON.parse(saved);
+                    state = { ...state, ...parsed };
+                    if (!Array.isArray(state.pointsSystem)) {
+                        state.pointsSystem = [...DEFAULT_POINTS_SYSTEM];
+                    }
                 } catch(e) {
                     console.error(e);
                 }
