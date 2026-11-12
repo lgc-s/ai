@@ -363,7 +363,7 @@
                         </h3>
                         <span id="free-drivers-count" class="text-[10px] bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-full font-semibold">0 Pilotos</span>
                     </div>
-                    <div id="free-drivers-list" class="space-y-1.5 custom-scrollbar max-h-60 overflow-y-auto">
+                    <div id="free-drivers-list" class="space-y-1.5 custom-scrollbar overflow-y-auto">
                         <p class="text-[10px] text-retro-muted italic py-2 text-center">Nenhum piloto livre no mercado.</p>
                     </div>
                 </div>
@@ -375,7 +375,7 @@
                         </h3>
                         <span id="dead-drivers-count" class="text-[10px] bg-red-50 text-retro-red border border-red-200 px-2 py-0.5 rounded-full font-semibold">0 Pilotos</span>
                     </div>
-                    <div id="dead-drivers-list" class="space-y-1.5 custom-scrollbar max-h-60 overflow-y-auto">
+                    <div id="dead-drivers-list" class="space-y-1.5 custom-scrollbar overflow-y-auto">
                         <p class="text-[10px] text-retro-muted italic py-2 text-center">Nenhuma fatalidade registrada nesta temporada.</p>
                     </div>
                 </div>
@@ -558,7 +558,7 @@
 
         let state = {
             year: 1965,
-            mortalityRate: 4.0,
+            mortalityRate: 0.0,
             dnfRate: 15.0,
             pointsSystem: [...DEFAULT_POINTS_SYSTEM],
             teams: [],
@@ -1643,7 +1643,7 @@
 
         function saveSettings() {
             state.year = parseInt(document.getElementById('setting-year').value) || 1965;
-            state.mortalityRate = parseFloat(document.getElementById('setting-mortality').value) || 4.0;
+            state.mortalityRate = parseFloat(document.getElementById('setting-mortality').value) || 0.0;
             state.dnfRate = parseFloat(document.getElementById('setting-dnf').value) || 15.0;
 
             let pts = [];
